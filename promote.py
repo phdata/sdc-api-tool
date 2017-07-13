@@ -1,63 +1,58 @@
+""" Promote an SDC pipeline from one environment to another."""
 #!/usr/bin/python
 import argparse
-import requests
 import getpass
 import re
 import logging
-""" Promote an SDC pipeline from one environment to another."""
-logging.basicConfig(level = logging.INFO)
 
-parser = argparse.ArgumentParser(description='Promote an SDC pipeine from one environment to another.')
-parser.add_argument('--srcHostUrl', required=True, dest='srcHostUrl', metavar='sourceHostUrl', help='The host URL of the source SDC (e.g. "http://sdc-dev.phdata.io:18360/")')
-parser.add_argument('--srcPipelineId', required=True, dest='srcPipelineId', metavar='sourcePipelineId', help='The ID of a pipeline in the source SDC')
-parser.add_argument('--destHostUrl', required=True, dest='destHostUrl', metavar='destinationHostUrl', help='The host URL of the destination SDC (e.g. "http://sdc-prod.phdata.io:18360/")')
-parser.add_argument('--destPipelineId', required=False, dest='destPipelineId', metavar='destintionPipelineId', help='The ID of a pipeline in the destination SDC')
-parser.add_argument('--start', action='store_true', dest='startDest', help='Start the destination pipeline if the import is successful.')
-args = parser.parse_args()
+import requests
+
+logging.basicConfig(level=logging.INFO)
+
 
 # required custom header for all SDC REST requests.
-xReqBy = {'X-Requested-By':'pipeline-utils'}
+X_REQ_BY = {'X-Requested-By': 'pipeline-utils'}
 
-def export(url, pipelineId, auth):
+def export(url, pipeline_id, auth):
     """Export the config and rules for a pipeline.
 
     Args:
         url        (str): the host url in the form 'http://host:port/'.
-        pipelineId (str): the ID of of the exported pipeline.
+        pipeline_id (str): the ID of of the exported pipeline.
         auth     (tuple): a tuple of username, and password.
 
     Returns:
         dict: the response json
 
     """
-    exportResult = requests.get(url + '/' + pipelineId + '/export', headers=xReqBy, auth=auth)
-    if exportResult.status_code == 404:
-        logging.error('Pipeline not found: ' + pipelineId)
-    exportResult.raise_for_status()
-    return exportResult.json()
+    export_result = requests.get(url + '/' + pipeline_id + '/export', headers=X_REQ_BY, auth=auth)
+    if export_result.status_code == 404:
+        logging.error('Pipeline not found: ' + pipeline_id)
+    export_result.raise_for_status()
+    return export_result.json()
 
-def status(url, pipelineId, auth):
+def status(url, pipeline_id, auth):
     """Retrieve the current status for a pipeline.
 
     Args:
         url        (str): the host url in the form 'http://host:port/'.
-        pipelineId (str): the ID of of the exported pipeline.
+        pipeline_id (str): the ID of of the exported pipeline.
         auth     (tuple): a tuple of username, and password.
 
     Returns:
         dict: the response json
 
     """
-    statustResult = requests.get(url + '/' + pipelineId + '/status', headers=xReqBy, auth=auth)
+    statust_result = requests.get(url + '/' + pipeline_id + '/status', headers=X_REQ_BY, auth=auth)
     logging.debug('Status request: ' + url + '/status')
-    return statustResult.json()
+    return statust_result.json()
 
-def stop(url, pipelineId, auth):
+def stop(url, pipeline_id, auth):
     """Stop a running pipeline.
 
     Args:
         url        (str): the host url in the form 'http://host:port/'.
-        pipelineId (str): the ID of of the exported pipeline.
+        pipeline_id (str): the ID of of the exported pipeline.
         auth     (tuple): a tuple of username, and password.
 
     Returns:
@@ -66,107 +61,131 @@ def stop(url, pipelineId, auth):
     TODO: unsure whether or not this call will wait for the pipeline to come
         to a complete stop, or if it will return immediately.
     """
-    stopResult = requests.post(url + '/' + pipelineId + '/stop', headers=xReqBy, auth=auth)
-    stopResult.raise_for_status()
+    stop_result = requests.post(url + '/' + pipeline_id + '/stop', headers=X_REQ_BY, auth=auth)
+    stop_result.raise_for_status()
     logging.info('Pipeline stop successful.')
-    return stopResult.json()
+    return stop_result.json()
 
-def importPipeline(url, pipelineId, auth, jsonPayload):
+def import_pipeline(url, pipeline_id, auth, json_payload):
     """Import a pipeline.
 
     This will completely overwrite the existing pipeline.
 
     Args:
         url          (str): the host url in the form 'http://host:port/'.
-        pipelineId   (str): the ID of of the exported pipeline.
+        pipeline_id   (str): the ID of of the exported pipeline.
         auth       (tuple): a tuple of username, and password.
-        jsonPayload (dict): the exported json payload as a dictionary.
+        json_payload (dict): the exported json payload as a dictionary.
 
     Returns:
         dict: the response json
 
     """
     parameters = {'overwrite':True}
-    importResult = requests.post(url + '/' + pipelineId + '/import', params=parameters, headers=xReqBy, auth=auth, json=jsonPayload)
-    if importResult.status_code != 200:
-        logging.error('Import error response: ' + importResult.text)
-    importResult.raise_for_status()
+    import_result = requests.post(url + '/' + pipeline_id + '/import', params=parameters,
+                                  headers=X_REQ_BY, auth=auth, json=json_payload)
+    if import_result.status_code != 200:
+        logging.error('Import error response: ' + import_result.text)
+    import_result.raise_for_status()
     logging.info('Pipeline import successful.')
-    return importResult.json()
+    return import_result.json()
 
-def start(url, pipelineId, auth):
+def start(url, pipeline_id, auth):
     """Start a running pipeline.
 
     Args:
         url        (str): the host url in the form 'http://host:port/'.
-        pipelineId (str): the ID of of the exported pipeline.
+        pipeline_id (str): the ID of of the exported pipeline.
         auth     (tuple): a tuple of username, and password.
 
     Returns:
         dict: the response json
 
-    TODO: 
+    TODO:
         * unsure whether or not this call will wait for the pipeline to fully
             start, or if it will return immediately.
         * add runtime parameters to the start command
     """
-    startResult = requests.post(url + '/' + pipelineId + '/start', headers=xReqBy, auth=auth, json={})
-    startResult.raise_for_status()
+    start_result = requests.post(url + '/' + pipeline_id + '/start',
+                                 headers=X_REQ_BY, auth=auth, json={})
+    start_result.raise_for_status()
     logging.info('Pipeline start successful.')
-    return startResult.json()
+    return start_result.json()
 
-def createPipeline(url, auth, jsonPayload):
+def create_pipeline(url, auth, json_payload):
     """Create a new pipeline.
 
     Args:
         url          (str): the host url in the form 'http://host:port/'.
         auth       (tuple): a tuple of username, and password.
-        jsonPayload (dict): the exported json paylod as a dictionary.
+        json_payload (dict): the exported json paylod as a dictionary.
 
     Returns:
         dict: the response json
 
     """
-    title, description = exportJson['pipelineConfig']['title'], exportJson['pipelineConfig']['description']
+    title = json_payload['pipelineConfig']['title']
+    description = json_payload['pipelineConfig']['description']
     params = {'description':description, 'autoGeneratePipelineId':True}
     logging.info('No destination pipeline ID provided.  Creating a new pipeline: ' + title)
-    putResult = requests.put(url + '/' + title, params=params, headers=xReqBy, auth=auth)
-    putResult.raise_for_status()
-    createJson = putResult.json()
-    logging.debug(createJson)
+    put_result = requests.put(url + '/' + title, params=params, headers=X_REQ_BY, auth=auth)
+    put_result.raise_for_status()
+    create_json = put_result.json()
+    logging.debug(create_json)
     logging.info('Pipeline creation successful.')
-    return createJson
+    return create_json
 
-def buildAPIUrl(hostUrl):
-    return re.sub(r'/$', '', hostUrl) + '/rest/v1/pipeline'
+def build_api_url(host_url):
+    """Formats the url to include the path parts for the REST API."""
+    return re.sub(r'/$', '', host_url) + '/rest/v1/pipeline'
 
-# Export the source pipeline
-srcUrl = buildAPIUrl(args.srcHostUrl)
-srcCreds = getpass.getpass('Source credentials (format -> username:password): ')
-srcAuth = tuple(srcCreds.split(':'))
-exportJson = export(srcUrl, args.srcPipelineId, srcAuth)
+def main():
+    """Main script entry point."""
+    parser = argparse.ArgumentParser(
+        description='Promote an SDC pipeine from one environment to another.')
+    parser.add_argument('--srcHostUrl', required=True, dest='src_host_url', metavar='sourceHostUrl',
+                        help='The host URL of the source SDC (e.g. "http://sdc-dev.phdata.io:18360/")')
+    parser.add_argument('--srcPipelineId', required=True, dest='src_pipeline_id',
+                        metavar='sourcePipelineId',
+                        help='The ID of a pipeline in the source SDC')
+    parser.add_argument('--destHostUrl', required=True, dest='dest_host_url',
+                        metavar='destinationHostUrl',
+                        help='The host URL of the destination SDC (e.g. "http://sdc-prod.phdata.io:18360/")')
+    parser.add_argument('--destPipelineId', required=False, dest='dest_pipeline_id',
+                        metavar='destintionPipelineId',
+                        help='The ID of a pipeline in the destination SDC')
+    parser.add_argument('--start', action='store_true', dest='start_dest',
+                        help='Start the destination pipeline if the import is successful.')
+    args = parser.parse_args()
 
-# Import the pipeline to the destination
-destUrl = buildAPIUrl(args.destHostUrl)
-destCreds = getpass.getpass('Destination credentials (format -> username:password): ')
-destAuth = tuple(destCreds.split(':'))
-destPipelineId = args.destPipelineId
-if destPipelineId and len(destPipelineId) > 0:
-    statusJson = status(destUrl, destPipelineId, destAuth)
+    # Export the source pipeline
+    src_url = build_api_url(args.src_host_url)
+    src_creds = getpass.getpass('Source credentials (format -> username:password): ')
+    src_auth = tuple(src_creds.split(':'))
+    export_json = export(src_url, args.src_pipeline_id, src_auth)
 
-    if statusJson['status'] == 'RUNNING':
-        # Stop the destination pipeline
-        stop(destUrl, destPipelineId, destAuth)
+    # Import the pipeline to the destination
+    dest_url = build_api_url(args.dest_host_url)
+    dest_creds = getpass.getpass('Destination credentials (format -> username:password): ')
+    dest_auth = tuple(dest_creds.split(':'))
+    dest_pipeline_id = args.dest_pipeline_id
+    if dest_pipeline_id:
+        status_json = status(dest_url, dest_pipeline_id, dest_auth)
 
-else:
-    # No destination pipeline id was provided, must be a new pipeline.
-    createJson = createPipeline(destUrl, destAuth, exportJson)
-    destPipelineId = createJson['pipelineId']
+        if status_json['status'] == 'RUNNING':
+            # Stop the destination pipeline
+            stop(dest_url, dest_pipeline_id, dest_auth)
 
-importPipeline(destUrl, destPipelineId, destAuth, exportJson)
+    else:
+        # No destination pipeline id was provided, must be a new pipeline.
+        create_json = create_pipeline(dest_url, dest_auth, export_json)
+        dest_pipeline_id = create_json['pipeline_id']
 
-# Start the imported pipeline
-if args.startDest:
-    start(destUrl, destPipelineId, destAuth)
+    import_pipeline(dest_url, dest_pipeline_id, dest_auth, export_json)
 
+    # Start the imported pipeline
+    if args.start_dest:
+        start(dest_url, dest_pipeline_id, dest_auth)
 
+if __name__ == '__main__':
+    main()
