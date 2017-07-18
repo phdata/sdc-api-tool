@@ -4,6 +4,7 @@ import argparse
 import getpass
 import api
 import json
+import logging
 
 def main():
     """Main script entry point."""
