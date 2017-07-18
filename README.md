@@ -14,9 +14,19 @@ destination's offset is required.
 The script includes help docs with details on the script arguments, but here is an example of calling 
 it from the shell:
 
-`python promote.py --srcHostUrl "http://localhost:18630/" 
-  --srcPipelineId ESImport77337a4f-74c5-45d1-91fd-7ce746f1bdfd 
-  --destHostUrl "http://localhost:18631/" 
-  --destPipelineId ESImport48b1200f-c270-4937-a226-b3443ce850f3`
+#### Promote Pipeline
+```python
+`python promote.py --srcHostUrl "http://localhost:18630/" \
+  --srcPipelineId ESImport77337a4f-74c5-45d1-91fd-7ce746f1bdfd \
+  --destHostUrl "http://localhost:18631/" \
+  --destPipelineId ESImport48b1200f-c270-4937-a226-b3443ce850f3` 
+```
+#### Export Pipeline
+
+```python
+python export_pipeline.py --srcHostUrl http://localhost:7183 \
+  --out sdc.json \
+  --pipelineId StreamManagerConsumerV06fa7c3d3-458f-4446-9f51-398899118b73 --creds 'user:pass'
+```
 
 
