@@ -2,7 +2,7 @@
 A set of utilities to help with management of Streamsets pipelines.
 
 ## Promote
-### Purpose
+#### Purpose
 This script is indented to migrate one pipeline from one SDC environment to another. SDC administrator
 credentials are required to execute these commands. The script will prompt the user to enter both
 the source and destination credentials (format = username:password). If a `destPipelineId` is not 
@@ -10,7 +10,7 @@ specified, a new pipeline will be created with the same name and description as 
 Currently, origin offset values are not part of the exported configuration, so no manipulation of the
 destination's offset is required.
 
-### Usage
+#### Usage
 The script includes help docs with details on the script arguments, but here is an example of calling 
 it from the shell:
 

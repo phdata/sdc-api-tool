@@ -4,6 +4,8 @@ import argparse
 import getpass
 import api
 import logging
+import time
+
 
 def main():
     """Main script entry point."""
@@ -41,6 +43,9 @@ def main():
         if status_json['status'] == 'RUNNING':
             # Stop the destination pipeline
             api.stop_pipeline(dest_url, dest_pipeline_id, dest_auth)
+            while status_json['status'] != 'STOPPED':
+                time.sleep(2)
+                status_json = api.pipeline_status(dest_url, dest_pipeline_id, dest_auth)
 
     else:
         # No destination pipeline id was provided, must be a new pipeline.
@@ -52,6 +57,7 @@ def main():
     # Start the imported pipeline
     if args.start_dest:
         api.start_pipeline(dest_url, dest_pipeline_id, dest_auth)
+
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)

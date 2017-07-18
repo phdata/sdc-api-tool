@@ -8,7 +8,9 @@ X_REQ_BY = {'X-Requested-By': 'pipeline-utils'}
 
 
 def start_pipeline(url, pipeline_id, auth):
-    """Start a running pipeline.
+    """Start a running pipeline. The API does not wait for the pipeline to be fully started.
+    Users must poll the pipeline status endpoint to determine when the pipeline is completely
+    running.
 
     Args:
         url        (str): the host url in the form 'http://host:port/'.
@@ -29,6 +31,7 @@ def start_pipeline(url, pipeline_id, auth):
     logging.info('Pipeline start successful.')
     return start_result.json()
 
+
 def export_pipeline(url, pipeline_id, auth):
     """Export the config and rules for a pipeline.
 
@@ -47,6 +50,7 @@ def export_pipeline(url, pipeline_id, auth):
     export_result.raise_for_status()
     return export_result.json()
 
+
 def pipeline_status(url, pipeline_id, auth):
     """Retrieve the current status for a pipeline.
 
@@ -63,8 +67,11 @@ def pipeline_status(url, pipeline_id, auth):
     logging.debug('Status request: ' + url + '/status')
     return statust_result.json()
 
+
 def stop_pipeline(url, pipeline_id, auth):
-    """Stop a running pipeline.
+    """Stop a running pipeline. The API does not wait for the pipeline to be 'STOPPED' before
+    returning.  Users must poll the pipeline status endpoint to determine when the pipeline is fully
+    stopped.
 
     Args:
         url        (str): the host url in the form 'http://host:port/'.
@@ -81,6 +88,7 @@ def stop_pipeline(url, pipeline_id, auth):
     stop_result.raise_for_status()
     logging.info('Pipeline stop successful.')
     return stop_result.json()
+
 
 def import_pipeline(url, pipeline_id, auth, json_payload):
     """Import a pipeline.
@@ -107,7 +115,6 @@ def import_pipeline(url, pipeline_id, auth, json_payload):
     return import_result.json()
 
 
-
 def create_pipeline(url, auth, json_payload):
     """Create a new pipeline.
 
@@ -130,6 +137,7 @@ def create_pipeline(url, auth, json_payload):
     logging.debug(create_json)
     logging.info('Pipeline creation successful.')
     return create_json
+
 
 def build_api_url(host_url):
     """Formats the url to include the path parts for the REST API."""
