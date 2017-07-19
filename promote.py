@@ -39,7 +39,6 @@ def main():
     dest_pipeline_id = args.dest_pipeline_id
     if dest_pipeline_id:
         status_json = api.pipeline_status(dest_url, dest_pipeline_id, dest_auth)
-
         if status_json['status'] == 'RUNNING':
             # Stop the destination pipeline
             api.stop_pipeline(dest_url, dest_pipeline_id, dest_auth)
