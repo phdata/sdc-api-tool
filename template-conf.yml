@@ -1,0 +1,13 @@
+instances:
+  production:
+    protocol: https
+    host: production-sdc-host
+    port: 18630
+  stage:
+    protocol: https
+    host: stage-sdc-host
+    port: 18630
+  development:
+    protocol: http
+    host: dev-sdc-host
+    port: 18630
