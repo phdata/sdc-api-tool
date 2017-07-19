@@ -3,15 +3,16 @@ docker run --rm -p 18630:18630 -d --name streamsets streamsets/datacollector || 
 #docker start streamsets || true
 sleep 10s
 
-python ../import_pipeline.py --dstHostUrl http://localhost:18630 --pipelineJson testpipeline.json --pipelineId firstpipe --creds 'admin:admin'
+python sdc-util.py import-pipeline --dest dev \
+  --pipelineJson test/testpipeline.json \
+  --pipelineId firstpipe
 
-python ../export_pipeline.py --srcHostUrl http://localhost:18630 \
+python sdc-util.py export-pipeline --src dev \
   --out sdc.json \
-  --pipelineId firstpipe --creds 'admin:admin'
+  --pipelineId firstpipe
 
-python ../promote.py --srcHostUrl "http://localhost:18630/" \
+python sdc-util.py promote-pipeline --src dev \
   --srcPipelineId firstpipe \
-  --destHostUrl "http://localhost:18630/" \
-  --destPipelineId promotedpipe
+  --dest dev
 
 #docker stop streamsets

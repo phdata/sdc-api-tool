@@ -1,6 +1,17 @@
 # Pipeline Utils
 A set of utilities to help with management of Streamsets pipelines.
 
+## Configuration
+#### conf.yml
+Create a YAML file called `conf.yml` in the root of the project and fill in with details of the
+instances you plan to use with these utilities.  See the `template-conf.yml` for an example of
+the required formatting.
+
+#### creds.yml
+Create a YAML file called `creds.yml` in the root of the project and fill in with credentials of the
+instances you plan to use with these utilities.  See the `template-creds.yml` for an example of
+the required formatting.
+
 ## Promote
 #### Purpose
 This script is indented to migrate one pipeline from one SDC environment to another. SDC administrator
@@ -15,18 +26,18 @@ The script includes help docs with details on the script arguments, but here is 
 it from the shell:
 
 #### Promote Pipeline
-```python
-`python promote.py --srcHostUrl "http://localhost:18630/" \
+```bash
+python sdc-util.py promote-pipeline --src dev \
   --srcPipelineId ESImport77337a4f-74c5-45d1-91fd-7ce746f1bdfd \
-  --destHostUrl "http://localhost:18631/" \
+  --dest stage \
   --destPipelineId ESImport48b1200f-c270-4937-a226-b3443ce850f3` 
 ```
 #### Export Pipeline
 
-```python
-python export_pipeline.py --srcHostUrl http://localhost:7183 \
+```bash
+python sdc-util.py export-pipeline --src dev \
   --out sdc.json \
-  --pipelineId StreamManagerConsumerV06fa7c3d3-458f-4446-9f51-398899118b73 --creds 'user:pass'
+  --pipelineId StreamManagerConsumerV06fa7c3d3-458f-4446-9f51-398899118b73
 ```
 
 
