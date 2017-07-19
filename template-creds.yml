@@ -1,0 +1,10 @@
+instances:
+  production:
+    user: admin
+    pass: s3cr3t
+  stage:
+    user: admin
+    pass: s35am3
+  development:
+    user: admin
+    pass: adm1n15trat0r
