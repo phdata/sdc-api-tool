@@ -39,5 +39,9 @@ python sdc-util.py pipeline export --src dev \
   --out sdc.json \
   --pipelineId StreamManagerConsumerV06fa7c3d3-458f-4446-9f51-398899118b73
 ```
-
-
+#### Import Pipeline
+```bash
+python sdc-util.py pipeline import --dest production \
+  --pipelineJson testpipeline.json \
+  --pipelineId firstpipe
+```
