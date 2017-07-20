@@ -1,0 +1,20 @@
+#!/bin/bash
+set -e
+cd "$(dirname "$0")"
+[[ ! "$(docker ps -a | grep streamsets)" ]] \
+    && docker start streamsets || docker run --rm -p 18630:18630 -d --name streamsets streamsets/datacollector \
+    && sleep 7s
+
+python ../sdc-util.py pipeline import --dest production \
+  --pipelineJson testpipeline.json \
+  --pipelineId firstpipe
+
+python ../sdc-util.py pipeline export --src production \
+  --out test-results/pipeline-out.json \
+  --pipelineId firstpipe
+
+python ../sdc-util.py pipeline promote --src production \
+  --srcPipelineId firstpipe \
+  --dest production
+
+docker stop streamsets

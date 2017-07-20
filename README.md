@@ -27,7 +27,7 @@ it from the shell:
 
 #### Promote Pipeline
 ```bash
-python sdc-util.py promote-pipeline --src dev \
+python sdc-util.py pipeline promote --src dev \
   --srcPipelineId ESImport77337a4f-74c5-45d1-91fd-7ce746f1bdfd \
   --dest stage \
   --destPipelineId ESImport48b1200f-c270-4937-a226-b3443ce850f3` 
@@ -35,7 +35,7 @@ python sdc-util.py promote-pipeline --src dev \
 #### Export Pipeline
 
 ```bash
-python sdc-util.py export-pipeline --src dev \
+python sdc-util.py pipeline export --src dev \
   --out sdc.json \
   --pipelineId StreamManagerConsumerV06fa7c3d3-458f-4446-9f51-398899118b73
 ```
