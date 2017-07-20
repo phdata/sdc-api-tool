@@ -41,7 +41,7 @@ python sdc-util.py pipeline export --src dev \
 ```
 #### Import Pipeline
 ```bash
-python ../sdc-util.py pipeline import --dest production \
+python sdc-util.py pipeline import --dest production \
   --pipelineJson testpipeline.json \
   --pipelineId firstpipe
 ```
