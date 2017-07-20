@@ -12,10 +12,10 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
-import requests
-
 import re
 import logging
+
+import requests
 
 # required custom header for all SDC REST requests.
 X_REQ_BY = {'X-Requested-By': 'pipeline-utils'}
@@ -152,7 +152,25 @@ def create_pipeline(url, auth, json_payload):
     logging.info('Pipeline creation successful.')
     return create_json
 
+def system_info(url, auth):
+    """Retrieve SDC system information.
 
-def build_api_url(host_url):
-    """Formats the url to include the path parts for the REST API."""
-    return re.sub(r'/$', '', host_url) + '/rest/v1/pipeline'
+    Args:
+        url (str): the host url.
+        auth (tuple): a tuple of username, and password.
+
+    """
+    sysinfo_response = requests.get(url + '/info', headers=X_REQ_BY, auth=auth)
+    sysinfo_response.raise_for_status()
+    return sysinfo_response.json()
+
+def build_pipeline_url(host_url):
+    """Formats the url to include the path parts for the pipeline REST API."""
+    return _base_url(host_url) + '/pipeline'
+
+def build_system_url(host_url):
+    """Formats the url to include the path parts for the system REST API."""
+    return _base_url(host_url) + '/system'
+
+def _base_url(host_url):
+    return re.sub(r'/$', '', host_url) + '/rest/v1'

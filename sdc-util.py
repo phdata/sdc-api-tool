@@ -15,9 +15,9 @@
 import argparse
 import logging
 from conf import Conf
-from commands import promote_pipeline, export_pipeline, import_pipeline
+from commands import promote_pipeline, export_pipeline, import_pipeline, system_info
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 
 config = Conf()
 
@@ -31,9 +31,12 @@ def export_command(args):
 def import_command(args):
     import_pipeline.main(config, args)
 
+def info_command(args):
+    system_info.main(config, args)
+
 def define_pipeline_args(subparsers):
 
-    pipeline_parser = subparsers.add_parser("pipeline", help='Available commands: \'pipeline\'')
+    pipeline_parser = subparsers.add_parser("pipeline", help='Available commands: \'import\', \'export\', \'promote\'')
 
     pipeline_subparsers = pipeline_parser.add_subparsers(help="Pipeline commands")
 
@@ -71,12 +74,26 @@ def define_pipeline_args(subparsers):
     import_parser.add_argument('--pipelineJson', required=True, dest='pipeline_json', help='Pipeline json file path')
     import_parser.set_defaults(func=import_command)
 
+
+def define_system_args(subparsers):
+    """Append the parser arguments for the 'system' commands"""
+    system_parser = subparsers.add_parser("system", help='Available commands: \'info\'')
+    system_subparsers = system_parser.add_subparsers(help='System commands')
+
+    # system info arguments
+    info_parser = system_subparsers.add_parser('info', help='Get system status information')
+    info_parser.add_argument('--src', required=True, dest='src', metavar='src',
+                             help='The instance name of the source SDC (must match the name in conf.yml)')
+    info_parser.set_defaults(func=info_command)
+
+
 def main():
     """Main script entry point."""
-    parser = argparse.ArgumentParser(description='Promote an SDC pipeline from one environment to another.')
+    parser = argparse.ArgumentParser(description='StreamSets Data Collector tools.')
     subparsers = parser.add_subparsers(help='sdc-util')
 
     define_pipeline_args(subparsers)
+    define_system_args(subparsers)
 
     args = parser.parse_args()
     args.func(args)
