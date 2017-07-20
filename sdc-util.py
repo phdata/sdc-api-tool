@@ -31,16 +31,6 @@ def export_command(args):
 def import_command(args):
     import_pipeline.main(config, args)
 
-def main():
-    """Main script entry point."""
-    parser = argparse.ArgumentParser(description='Promote an SDC pipeline from one environment to another.')
-    subparsers = parser.add_subparsers(help='sdc-util')
-
-    define_pipeline_args(subparsers)
-
-    args = parser.parse_args()
-    args.func(args)
-
 def define_pipeline_args(subparsers):
 
     pipeline_parser = subparsers.add_parser("pipeline", help='Available commands: \'pipeline\'')
@@ -80,6 +70,16 @@ def define_pipeline_args(subparsers):
                                metavar='destinationPipelineId', help='The ID of a pipeline in the source SDC')
     import_parser.add_argument('--pipelineJson', required=True, dest='pipeline_json', help='Pipeline json file path')
     import_parser.set_defaults(func=import_command)
+
+def main():
+    """Main script entry point."""
+    parser = argparse.ArgumentParser(description='Promote an SDC pipeline from one environment to another.')
+    subparsers = parser.add_subparsers(help='sdc-util')
+
+    define_pipeline_args(subparsers)
+
+    args = parser.parse_args()
+    args.func(args)
 
 if __name__ == '__main__':
     main()
