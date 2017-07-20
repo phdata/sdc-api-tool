@@ -12,19 +12,17 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
-""" Export an SDC pipeline from one environment to a JSON file."""
-import api
+""" Retrieve SDC system information."""
+import logging
 import json
 from commands import build_instance_url
-
+import api
 
 def main(conf, args):
-    """Main script entry point."""
-    # Export the source pipeline and save it to file
-    src = conf.config['instances'][args.src_instance]
-    src_url = api.build_pipeline_url(build_instance_url(src))
-    src_auth = tuple([conf.creds['instances'][args.src_instance]['user'],
-                      conf.creds['instances'][args.src_instance]['pass']])
-    export_json = api.export_pipeline(src_url, args.src_pipeline_id, src_auth)
-    with open(args.out, 'w') as outFile:
-        outFile.write(json.dumps(export_json, indent=4, sort_keys=False))
+    """Retieve SDC system information."""
+    src = conf.config['instances'][args.src]
+    src_url = api.build_system_url(build_instance_url(src))
+    src_auth = tuple([conf.creds['instances'][args.src]['user'],
+                      conf.creds['instances'][args.src]['pass']])
+    sysinfo_json = api.system_info(src_url, src_auth)
+    logging.info(json.dumps(sysinfo_json, indent=4, sort_keys=False))

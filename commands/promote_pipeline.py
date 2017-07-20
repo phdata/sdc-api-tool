@@ -22,13 +22,13 @@ def main(conf, args):
     """Main script entry point."""
     # Export the source pipeline
     src = conf.config['instances'][args.src_instance]
-    src_url = api.build_api_url(build_instance_url(src))
+    src_url = api.build_pipeline_url(build_instance_url(src))
     src_auth = tuple([conf.creds['instances'][args.src_instance]['user'], conf.creds['instances'][args.src_instance]['pass']])
     export_json = api.export_pipeline(src_url, args.src_pipeline_id, src_auth)
 
     # Import the pipeline to the destination
     dest = conf.config['instances'][args.dest_instance]
-    dest_url = api.build_api_url(build_instance_url(dest))
+    dest_url = api.build_pipeline_url(build_instance_url(dest))
     dest_auth = tuple([conf.creds['instances'][args.dest_instance]['user'], conf.creds['instances'][args.dest_instance]['pass']])
     dest_pipeline_id = args.dest_pipeline_id
     if dest_pipeline_id:
