@@ -1,30 +1,30 @@
 #!/bin/bash
 set -e
+CONTAINER_NAME="sdc-api-streamsets"
 cd "$(dirname "$0")"
-[[ ! "$(docker ps -a | grep streamsets)" ]] \
-    && docker start streamsets || docker run --rm -p 18630:18630 -d --name streamsets streamsets/datacollector \
-    && sleep 2s
-
+[[ ! "$(docker ps -a | grep $CONTAINER_NAME)" ]] \
+    && docker start $CONTAINER_NAME || echo "creating container $CONTAINER_NAME"; docker run --rm -p 18630:18630 -d --name $CONTAINER_NAME streamsets/datacollector 
 # poll for streamsets availability
 echo "Awaiting the docker container"
-until python ../sdc-util.py system info --src production > /dev/null 2>&1
+until ../sdc-util system info --src production > /dev/null 2>&1
 do
-  echo "."
-  sleep 2s
+  echo -n "."
+  sleep 0.25
 done
+echo
 
-python ../sdc-util.py pipeline import --dest production \
+../sdc-util pipeline import --dest production \
   --pipelineJson testpipeline.json \
   --pipelineId firstpipe
 
 [ ! -d test-results ] && mkdir test-results
 
-python ../sdc-util.py pipeline export --src production \
+../sdc-util pipeline export --src production \
   --out test-results/pipeline-out.json \
   --pipelineId firstpipe
 
-python ../sdc-util.py pipeline promote --src production \
+../sdc-util pipeline promote --src production \
   --srcPipelineId firstpipe \
   --dest production
 
-docker stop streamsets
+docker stop $CONTAINER_NAME

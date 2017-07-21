@@ -1,0 +1,4 @@
+#!/bin/bash
+set -e
+SDC_DIR="$(cd "$(dirname "$0")" && pwd)"
+python $SDC_DIR/sdc-util.py $@
