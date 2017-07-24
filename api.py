@@ -16,9 +16,14 @@ import re
 import logging
 
 import requests
-
+import time
+from enum import Enum
 # required custom header for all SDC REST requests.
 X_REQ_BY = {'X-Requested-By': 'pipeline-utils'}
+POLLING_SECONDS = 0.25
+
+STATUS_STOPPED = 'STOPPED'
+STATUS_RUNNING = 'RUNNING'
 
 
 def start_pipeline(url, pipeline_id, auth):
@@ -42,9 +47,19 @@ def start_pipeline(url, pipeline_id, auth):
     start_result = requests.post(url + '/' + pipeline_id + '/start',
                                  headers=X_REQ_BY, auth=auth, json={})
     start_result.raise_for_status()
-    logging.info('Pipeline start successful.')
-    return start_result.json()
+    logging.info('Pipeline start requested.')
 
+    poll_pipeline_status(STATUS_RUNNING, url, pipeline_id, auth)
+
+    logging.info("Pipeline started.")
+
+
+def poll_pipeline_status(target, url, pipeline_id, auth):
+    status = ""
+    while status != target:
+        print(status)
+        time.sleep(POLLING_SECONDS)
+        status = pipeline_status(url, pipeline_id, auth)['status']
 
 def export_pipeline(url, pipeline_id, auth):
     """Export the config and rules for a pipeline.
@@ -79,6 +94,7 @@ def pipeline_status(url, pipeline_id, auth):
     """
     statust_result = requests.get(url + '/' + pipeline_id + '/status', headers=X_REQ_BY, auth=auth)
     logging.debug('Status request: ' + url + '/status')
+    logging.debug(statust_result.json())
     return statust_result.json()
 
 
@@ -98,9 +114,16 @@ def stop_pipeline(url, pipeline_id, auth):
     TODO: unsure whether or not this call will wait for the pipeline to come
         to a complete stop, or if it will return immediately.
     """
+
     stop_result = requests.post(url + '/' + pipeline_id + '/stop', headers=X_REQ_BY, auth=auth)
     stop_result.raise_for_status()
-    logging.info('Pipeline stop successful.')
+
+    logging.info("Pipeline stop requested.")
+
+
+    poll_pipeline_status(STATUS_STOPPED, url, pipeline_id, auth)
+
+    logging.info('Pipeline stopped.')
     return stop_result.json()
 
 
@@ -162,6 +185,7 @@ def system_info(url, auth):
     """
     sysinfo_response = requests.get(url + '/info', headers=X_REQ_BY, auth=auth)
     sysinfo_response.raise_for_status()
+    print(sysinfo_response)
     return sysinfo_response.json()
 
 def build_pipeline_url(host_url):

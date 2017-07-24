@@ -15,7 +15,7 @@
 import argparse
 import logging
 from conf import Conf
-from commands import promote_pipeline, export_pipeline, import_pipeline, system_info
+from commands import promote_pipeline, export_pipeline, import_pipeline, system_info, start_pipeline, stop_pipeline
 
 logging.basicConfig(level=logging.INFO)
 
@@ -27,12 +27,18 @@ def promote_command(args):
 def export_command(args):
     export_pipeline.main(config, args)
 
-
 def import_command(args):
     import_pipeline.main(config, args)
 
 def info_command(args):
     system_info.main(config, args)
+
+def start_command(args):
+    start_pipeline.main(config, args)
+
+def stop_command(args):
+    stop_pipeline.main(config, args)
+
 
 def define_pipeline_args(subparsers):
 
@@ -74,6 +80,23 @@ def define_pipeline_args(subparsers):
     import_parser.add_argument('--pipelineJson', required=True, dest='pipeline_json', help='Pipeline json file path')
     import_parser.set_defaults(func=import_command)
 
+    # pipeline import arguments
+    import_parser = pipeline_subparsers.add_parser('start', help='Start a pipeline.')
+    import_parser.add_argument('--host', required=True, dest='host_instance', metavar='host_instance',
+                               help='The name of the destination SDC (must match an instance name in conf.yml)')
+    import_parser.add_argument('--pipelineId', required=True, dest='pipeline_id',
+                               metavar='destinationPipelineId', help='The ID of a pipeline in the source SDC')
+    import_parser.set_defaults(func=start_command)
+
+
+    # pipeline import arguments
+    import_parser = pipeline_subparsers.add_parser('stop', help='Stop a pipeline.')
+    import_parser.add_argument('--host', required=True, dest='host_instance', metavar='host_instance',
+                               help='The instance name of the target SDC (must match an instance name in conf.yml)')
+    import_parser.add_argument('--pipelineId', required=True, dest='pipeline_id',
+                               metavar='destinationPipelineId', help='The ID of a pipeline in the source SDC')
+    import_parser.set_defaults(func=stop_command)
+
 
 def define_system_args(subparsers):
     """Append the parser arguments for the 'system' commands"""
@@ -83,7 +106,7 @@ def define_system_args(subparsers):
     # system info arguments
     info_parser = system_subparsers.add_parser('info', help='Get system status information')
     info_parser.add_argument('--src', required=True, dest='src', metavar='src',
-                             help='The instance name of the source SDC (must match the name in conf.yml)')
+                             help='The instance name of the target SDC (must match the name in conf.yml)')
     info_parser.set_defaults(func=info_command)
 
 
@@ -97,6 +120,7 @@ def main():
 
     args = parser.parse_args()
     args.func(args)
+
 
 if __name__ == '__main__':
     main()
