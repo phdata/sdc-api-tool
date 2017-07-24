@@ -32,13 +32,7 @@ def main(conf, args):
     dest_auth = tuple([conf.creds['instances'][args.dest_instance]['user'], conf.creds['instances'][args.dest_instance]['pass']])
     dest_pipeline_id = args.dest_pipeline_id
     if dest_pipeline_id:
-        status_json = api.pipeline_status(dest_url, dest_pipeline_id, dest_auth)
-        if status_json['status'] == 'RUNNING':
-            # Stop the destination pipeline
-            api.stop_pipeline(dest_url, dest_pipeline_id, dest_auth)
-            while status_json['status'] != 'STOPPED':
-                time.sleep(2)
-                status_json = api.pipeline_status(dest_url, dest_pipeline_id, dest_auth)
+        api.stop_pipeline(dest_url, dest_pipeline_id, dest_auth)
 
     else:
         # No destination pipeline id was provided, must be a new pipeline.

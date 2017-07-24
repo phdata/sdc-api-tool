@@ -1,6 +1,11 @@
 #!/bin/bash
 set -e
 CONTAINER_NAME="sdc-api-streamsets"
+
+function cleanup {
+   docker stop $CONTAINER_NAME
+}
+trap cleanup EXIT
 cd "$(dirname "$0")"
 [[ ! "$(docker ps -a | grep $CONTAINER_NAME)" ]] \
     && docker start $CONTAINER_NAME || echo "creating container $CONTAINER_NAME"; docker run --rm -p 18630:18630 -d --name $CONTAINER_NAME streamsets/datacollector 
@@ -27,4 +32,12 @@ echo
   --srcPipelineId firstpipe \
   --dest production
 
-docker stop $CONTAINER_NAME
+
+../sdc-util pipeline start \
+  --pipelineId firstpipe \
+  --host production
+
+../sdc-util pipeline stop \
+  --pipelineId firstpipe \
+  --host production
+
