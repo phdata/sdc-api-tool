@@ -22,7 +22,7 @@ def _read_yaml(path):
     return conf
 
 
-def read_configuration(path='conf.yml'):
+def read_configuration(path='sdc-hosts.yml'):
     return _read_yaml(path)
 
 
