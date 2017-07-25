@@ -2,9 +2,9 @@
 A set of utilities to help with management of Streamsets pipelines.
 
 ## Configuration
-#### conf.yml
-Create a YAML file called `conf.yml` in the root of the project and fill in with details of the
-instances you plan to use with these utilities.  See the `template-conf.yml` for an example of
+#### sdc-hosts.yml
+Create a YAML file called `sdc-hosts.yml` in the root of the project and fill in with details of the
+instances you plan to use with these utilities.  See the `template-sdc-hosts.yml` for an example of
 the required formatting.
 
 #### creds.yml
