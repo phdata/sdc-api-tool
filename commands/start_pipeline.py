@@ -14,6 +14,7 @@
 
 """ Start a pipeline. """
 import api
+import json
 import time
 from commands import build_instance_url
 
@@ -23,6 +24,6 @@ def main(conf, args):
     host = conf.config['instances'][args.host_instance]
     url = api.build_pipeline_url(build_instance_url(host))
     auth = tuple([conf.creds['instances'][args.host_instance]['user'], conf.creds['instances'][args.host_instance]['pass']])
-
-    api.start_pipeline(url, args.pipeline_id, auth)
+    runtime_parameters = json.loads(args.runtime_parameters)
+    api.start_pipeline(url, args.pipeline_id, auth, runtime_parameters)
 
