@@ -26,7 +26,7 @@ STATUS_STOPPED = 'STOPPED'
 STATUS_RUNNING = 'RUNNING'
 
 
-def start_pipeline(url, pipeline_id, auth):
+def start_pipeline(url, pipeline_id, auth, runtime_parameters):
     """Start a running pipeline. The API does not wait for the pipeline to be fully started.
     Users must poll the pipeline status endpoint to determine when the pipeline is completely
     running.
@@ -38,14 +38,12 @@ def start_pipeline(url, pipeline_id, auth):
 
     Returns:
         dict: the response json
-
-    TODO:
-        * unsure whether or not this call will wait for the pipeline to fully
-            start, or if it will return immediately.
-        * add runtime parameters to the start command
     """
+    body = {}
+    if runtime_parameters:
+        body = runtime_parameters
     start_result = requests.post(url + '/' + pipeline_id + '/start',
-                                 headers=X_REQ_BY, auth=auth, json={})
+                                 headers=X_REQ_BY, auth=auth, json=body)
     start_result.raise_for_status()
     logging.info('Pipeline start requested.')
 

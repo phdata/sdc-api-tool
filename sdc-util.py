@@ -80,16 +80,18 @@ def define_pipeline_args(subparsers):
     import_parser.add_argument('--pipelineJson', required=True, dest='pipeline_json', help='Pipeline json file path')
     import_parser.set_defaults(func=import_command)
 
-    # pipeline import arguments
+    # pipeline start arguments
     import_parser = pipeline_subparsers.add_parser('start', help='Start a pipeline.')
     import_parser.add_argument('--host', required=True, dest='host_instance', metavar='host_instance',
                                help='The name of the destination SDC (must match an instance name in sdc-hosts.yml)')
     import_parser.add_argument('--pipelineId', required=True, dest='pipeline_id',
                                metavar='destinationPipelineId', help='The ID of a pipeline in the source SDC')
+    import_parser.add_argument('--runtimeParameters', required=True, dest='runtime_parameters',
+                               metavar='{"HOST": "host1"}', help='JSON blob of runtime parameters')
     import_parser.set_defaults(func=start_command)
 
 
-    # pipeline import arguments
+    # pipeline stop arguments
     import_parser = pipeline_subparsers.add_parser('stop', help='Stop a pipeline.')
     import_parser.add_argument('--host', required=True, dest='host_instance', metavar='host_instance',
                                help='The instance name of the target SDC (must match an instance name in sdc-hosts.yml)')
