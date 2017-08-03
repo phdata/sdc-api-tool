@@ -32,10 +32,18 @@ echo
   --srcPipelineId firstpipe \
   --dest production
 
-
 ../sdc-util pipeline start \
   --pipelineId firstpipe \
   --host production
+
+../sdc-util pipeline stop \
+  --pipelineId firstpipe \
+  --host production
+
+../sdc-util pipeline start \
+  --pipelineId firstpipe \
+  --host production \
+  --runtimeParameters '{"foo": 2}'
 
 ../sdc-util pipeline stop \
   --pipelineId firstpipe \
