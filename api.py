@@ -26,30 +26,27 @@ STATUS_STOPPED = 'STOPPED'
 STATUS_RUNNING = 'RUNNING'
 
 
-def start_pipeline(url, pipeline_id, auth, runtime_parameters):
-    """Start a running pipeline. The API does not wait for the pipeline to be fully started.
-    Users must poll the pipeline status endpoint to determine when the pipeline is completely
-    running.
+def start_pipeline(url, pipeline_id, auth, runtime_parameters={}):
+    """Start a running pipeline. The API waits for the pipeline to be fully started.
 
     Args:
-        url        (str): the host url in the form 'http://host:port/'.
-        pipeline_id (str): the ID of of the exported pipeline.
-        auth     (tuple): a tuple of username, and password.
+        url                 (str): the host url in the form 'http://host:port/'.
+        pipeline_id         (str): the ID of of the exported pipeline.
+        auth              (tuple): a tuple of username, and password.
+        runtime_parameters (dict): the desired runtime parameters for the pipeline.
 
     Returns:
         dict: the response json
     """
-    body = {}
-    if runtime_parameters:
-        body = runtime_parameters
     start_result = requests.post(url + '/' + pipeline_id + '/start',
-                                 headers=X_REQ_BY, auth=auth, json=body)
+                                 headers=X_REQ_BY, auth=auth, json=runtime_parameters)
     start_result.raise_for_status()
     logging.info('Pipeline start requested.')
 
     poll_pipeline_status(STATUS_RUNNING, url, pipeline_id, auth)
 
     logging.info("Pipeline started.")
+    return start_result.json()
 
 
 def poll_pipeline_status(target, url, pipeline_id, auth):
@@ -58,6 +55,7 @@ def poll_pipeline_status(target, url, pipeline_id, auth):
         print(status)
         time.sleep(POLLING_SECONDS)
         status = pipeline_status(url, pipeline_id, auth)['status']
+
 
 def export_pipeline(url, pipeline_id, auth):
     """Export the config and rules for a pipeline.
@@ -97,27 +95,22 @@ def pipeline_status(url, pipeline_id, auth):
 
 
 def stop_pipeline(url, pipeline_id, auth):
-    """Stop a running pipeline. The API does not wait for the pipeline to be 'STOPPED' before
-    returning.  Users must poll the pipeline status endpoint to determine when the pipeline is fully
-    stopped.
+    """Stop a running pipeline. The API waits for the pipeline to be 'STOPPED' before returning.
 
     Args:
-        url        (str): the host url in the form 'http://host:port/'.
+        url         (str): the host url in the form 'http://host:port/'.
         pipeline_id (str): the ID of of the exported pipeline.
-        auth     (tuple): a tuple of username, and password.
+        auth      (tuple): a tuple of username, and password.
 
     Returns:
         dict: the response json
 
-    TODO: unsure whether or not this call will wait for the pipeline to come
-        to a complete stop, or if it will return immediately.
     """
 
     stop_result = requests.post(url + '/' + pipeline_id + '/stop', headers=X_REQ_BY, auth=auth)
     stop_result.raise_for_status()
 
     logging.info("Pipeline stop requested.")
-
 
     poll_pipeline_status(STATUS_STOPPED, url, pipeline_id, auth)
 
@@ -154,8 +147,8 @@ def create_pipeline(url, auth, json_payload):
     """Create a new pipeline.
 
     Args:
-        url          (str): the host url in the form 'http://host:port/'.
-        auth       (tuple): a tuple of username, and password.
+        url           (str): the host url in the form 'http://host:port/'.
+        auth        (tuple): a tuple of username, and password.
         json_payload (dict): the exported json paylod as a dictionary.
 
     Returns:
