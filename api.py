@@ -17,7 +17,6 @@ import logging
 
 import requests
 import time
-from enum import Enum
 # required custom header for all SDC REST requests.
 X_REQ_BY = {'X-Requested-By': 'pipeline-utils'}
 POLLING_SECONDS = 0.25
