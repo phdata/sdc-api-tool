@@ -59,3 +59,12 @@ sdc-util pipeline stop \
   --pipelineId firstpipe \
   --host production
 ```
+
+## Developing
+This project depends on Python and Docker Compose
+Installing required libraries
+
+```bash
+pip install -r requirements.txt
+```
+
