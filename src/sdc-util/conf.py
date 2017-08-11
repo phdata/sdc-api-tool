@@ -16,7 +16,7 @@ import yaml
 
 
 def _read_yaml(path):
-    stream = file(path, 'r')
+    stream = open(path, 'r')
     conf = yaml.safe_load(stream)
     stream.close()
     return conf
