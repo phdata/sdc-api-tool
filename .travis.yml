@@ -1,0 +1,28 @@
+sudo: required
+services:
+  - docker
+
+language: python
+
+python:
+  - "2.7"
+  - "3.5"
+
+before_install:
+  - pip --version
+  - pip install -r requirements.txt
+  - docker --version
+  - docker-compose --version
+
+install:
+  - pip install -r requirements.txt
+
+before_script:
+  - docker-compose -f test/compose/sdc.yml pull
+
+script:
+  - cd test; python -m pytest
+
+after_script:
+
+after_success:
