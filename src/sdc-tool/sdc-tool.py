@@ -124,6 +124,14 @@ def define_pipeline_args(subparsers):
                                metavar='destinationPipelineId', help='The ID of a pipeline in the source SDC')
     validate_parser.set_defaults(func=validate_command)
 
+    # pipeline validate arguments
+    import_parser = pipeline_subparsers.add_parser('validate', help='Validate a pipeline and show issues.')
+    import_parser.add_argument('--host', required=True, dest='host_instance', metavar='host_instance',
+                               help='The instance name of the target SDC (must match an instance name in sdc-hosts.yml)')
+    import_parser.add_argument('--pipelineId', required=True, dest='pipeline_id',
+                               metavar='destinationPipelineId', help='The ID of a pipeline in the source SDC')
+    import_parser.set_defaults(func=validate_command)
+
 
 def define_system_args(subparsers):
     """Append the parser arguments for the 'system' commands"""
