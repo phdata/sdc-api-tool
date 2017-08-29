@@ -48,25 +48,38 @@ def define_pipeline_args(subparsers):
 
     # pipeline promote arguments
     promote_parser = pipeline_subparsers.add_parser('promote', help='Promote a pipeline from one SDC to another.')
-    promote_parser.add_argument('--src', required=True, dest='src_instance', metavar='source_instance_name',
+    promote_parser.add_argument('--src', required=True,
+                                dest='src_instance',
+                                metavar='source_instance_name',
                                 help='The instance name of the source SDC (must match the name in sdc-hosts.yml)')
-    promote_parser.add_argument('--dest', required=True, dest='dest_instance', metavar='dest_instance_name',
+    promote_parser.add_argument('--dest',
+                                required=True,
+                                dest='dest_instance',
+                                metavar='dest_instance_name',
                                 help='The instance name of the destination SDC (must match the name in sdc-hosts.yml)')
-    promote_parser.add_argument('--srcPipelineId', required=True, dest='src_pipeline_id',
+    promote_parser.add_argument('--srcPipelineId',
+                                required=True,
+                                dest='src_pipeline_id',
                                 metavar='source-pipeline-id',
                                 help='The ID of a pipeline in the source SDC')
-    promote_parser.add_argument('--destPipelineId', required=False, dest='dest_pipeline_id',
+    promote_parser.add_argument('--destPipelineId',
+                                required=False, dest='dest_pipeline_id',
                                 metavar='destination-pipeline-id',
                                 help='The ID of a pipeline in the destination SDC')
-    promote_parser.add_argument('--start', action='store_true', dest='start_dest',
+    promote_parser.add_argument('--start',
+                                action='store_true', dest='start_dest',
                                 help='Start the destination pipeline if the import is successful.')
     promote_parser.set_defaults(func=promote_command)
 
     # pipeline export arguments
     export_parser = pipeline_subparsers.add_parser('export', help='Export a pipeline to a file.')
-    export_parser.add_argument('--src', required=True, dest='src_instance', metavar='source',
+    export_parser.add_argument('--src',
+                               required=True,
+                               dest='src_instance', metavar='source',
                                help='The instance name of the source SDC (must match the name in sdc-hosts.yml)')
-    export_parser.add_argument('--pipelineId', required=True, dest='src_pipeline_id',
+    export_parser.add_argument('--pipelineId',
+                               required=True,
+                               dest='src_pipeline_id',
                                metavar='sourcePipelineId', help='The ID of a pipeline in the source SDC')
     export_parser.add_argument('--out', required=True, dest='out', help='Output file path')
     export_parser.set_defaults(func=export_command)
@@ -114,7 +127,7 @@ def define_system_args(subparsers):
 def main():
     """Main script entry point."""
     parser = argparse.ArgumentParser(description='StreamSets Data Collector tools.')
-    subparsers = parser.add_subparsers(help='sdc-util')
+    subparsers = parser.add_subparsers(help='sdc-tool')
 
     define_pipeline_args(subparsers)
     define_system_args(subparsers)

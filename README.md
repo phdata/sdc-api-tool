@@ -26,7 +26,7 @@ it from the shell:
 
 #### Promote Pipeline
 ```bash
-sdc-util pipeline promote --src dev \
+sdc-tool pipeline promote --src dev \
   --srcPipelineId ESImport77337a4f-74c5-45d1-91fd-7ce746f1bdfd \
   --dest stage \
   --destPipelineId ESImport48b1200f-c270-4937-a226-b3443ce850f3` 
@@ -34,27 +34,27 @@ sdc-util pipeline promote --src dev \
 #### Export Pipeline
 
 ```bash
-sdc-util pipeline export --src dev \
+sdc-tool pipeline export --src dev \
   --out sdc.json \
   --pipelineId StreamManagerConsumerV06fa7c3d3-458f-4446-9f51-398899118b73
 ```
 #### Import Pipeline
 ```bash
-sdc-util pipeline import --dest production \
+sdc-tool pipeline import --dest production \
   --pipelineJson testpipeline.json \
   --pipelineId firstpipe
 ```
 
 #### Start Pipeline
 ```bash
-sdc-util pipeline start \
+sdc-tool pipeline start \
   --pipelineId firstpipe \
   --host production
 ```
 
 #### Stop Pipeline
 ```bash
-sdc-util pipeline stop \
+sdc-tool pipeline stop \
   --pipelineId firstpipe \
   --host production
 ```
