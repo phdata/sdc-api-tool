@@ -4,9 +4,10 @@ import shlex
 import subprocess
 import time
 import logging
-
 import pytest
 import requests
+
+logging.basicConfig(level=logging.INFO)
 
 TIMEOUT_SECONDS = 30
 
