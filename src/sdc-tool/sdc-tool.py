@@ -45,7 +45,9 @@ def validate_command(args):
 
 def define_pipeline_args(subparsers):
 
-    pipeline_parser = subparsers.add_parser("pipeline", help='Available commands: \'import\', \'export\', \'promote\', \'validate\'')
+    pipeline_parser = \
+        subparsers.add_parser("pipeline",
+                              help='''Available commands: 'import', 'export', 'start', 'stop', 'promote', 'validate\'''')
 
     pipeline_subparsers = pipeline_parser.add_subparsers(help="Pipeline commands")
 
@@ -97,30 +99,30 @@ def define_pipeline_args(subparsers):
     import_parser.set_defaults(func=import_command)
 
     # pipeline start arguments
-    import_parser = pipeline_subparsers.add_parser('start', help='Start a pipeline.')
-    import_parser.add_argument('--host', required=True, dest='host_instance', metavar='host_instance',
+    start_parser = pipeline_subparsers.add_parser('start', help='Start a pipeline.')
+    start_parser.add_argument('--host', required=True, dest='host_instance', metavar='host_instance',
                                help='The name of the destination SDC (must match an instance name in sdc-hosts.yml)')
-    import_parser.add_argument('--pipelineId', required=True, dest='pipeline_id',
+    start_parser.add_argument('--pipelineId', required=True, dest='pipeline_id',
                                metavar='destinationPipelineId', help='The ID of a pipeline in the source SDC')
-    import_parser.add_argument('--runtimeParameters', required=False, dest='runtime_parameters',
+    start_parser.add_argument('--runtimeParameters', required=False, dest='runtime_parameters',
                                metavar='{"HOST": "host1"}', help='JSON blob of runtime parameters')
-    import_parser.set_defaults(func=start_command)
+    start_parser.set_defaults(func=start_command)
 
     # pipeline stop arguments
-    import_parser = pipeline_subparsers.add_parser('stop', help='Stop a pipeline.')
-    import_parser.add_argument('--host', required=True, dest='host_instance', metavar='host_instance',
+    stop_parser = pipeline_subparsers.add_parser('stop', help='Stop a pipeline.')
+    stop_parser.add_argument('--host', required=True, dest='host_instance', metavar='host_instance',
                                help='The instance name of the target SDC (must match an instance name in sdc-hosts.yml)')
-    import_parser.add_argument('--pipelineId', required=True, dest='pipeline_id',
+    stop_parser.add_argument('--pipelineId', required=True, dest='pipeline_id',
                                metavar='destinationPipelineId', help='The ID of a pipeline in the source SDC')
-    import_parser.set_defaults(func=stop_command)
+    stop_parser.set_defaults(func=stop_command)
 
     # pipeline validate arguments
-    import_parser = pipeline_subparsers.add_parser('validate', help='Validate a pipeline and show issues.')
-    import_parser.add_argument('--host', required=True, dest='host_instance', metavar='host_instance',
+    validate_parser = pipeline_subparsers.add_parser('validate', help='Validate a pipeline and show issues.')
+    validate_parser.add_argument('--host', required=True, dest='host_instance', metavar='host_instance',
                                help='The instance name of the target SDC (must match an instance name in sdc-hosts.yml)')
-    import_parser.add_argument('--pipelineId', required=True, dest='pipeline_id',
+    validate_parser.add_argument('--pipelineId', required=True, dest='pipeline_id',
                                metavar='destinationPipelineId', help='The ID of a pipeline in the source SDC')
-    import_parser.set_defaults(func=validate_command)
+    validate_parser.set_defaults(func=validate_command)
 
 
 def define_system_args(subparsers):
