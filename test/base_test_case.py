@@ -3,6 +3,7 @@ import os
 import shlex
 import subprocess
 import time
+import logging
 
 import pytest
 import requests
@@ -36,8 +37,11 @@ def curl_until_success(port, endpoint="/", params={}):
     timeout = datetime.datetime.now() + datetime.timedelta(seconds=TIMEOUT_SECONDS)
     while datetime.datetime.now() < timeout:
         try:
-            response = requests.get("http://{}:{}{}".format(
-                get_docker_host(), port, endpoint), params=params)
+            url = "http://{}:{}{}".format(
+                get_docker_host(), port, endpoint)
+            logging.info(url)
+            response = requests.get(url, params=params)
+            logging.info('polling until success status code: ' + str(response.status_code))
         except requests.exceptions.ConnectionError:
             pass
         else:
