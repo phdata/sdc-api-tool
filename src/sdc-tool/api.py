@@ -117,6 +117,25 @@ def stop_pipeline(url, pipeline_id, auth):
     return stop_result.json()
 
 
+def validate_pipeline(url, pipeline_id, auth):
+    """Validate a pipeline and show issues.
+
+    Args:
+        url         (str): the host url in the form 'http://host:port/'.
+        pipeline_id (str): the ID of of the exported pipeline.
+        auth      (tuple): a tuple of username, and password.
+
+    Returns:
+        dict: the response json
+
+    """
+
+    preview_result = requests.get(url + '/' + pipeline_id + '/validate', headers=X_REQ_BY, auth=auth)
+    preview_result.raise_for_status()
+
+    return preview_result.json()
+
+
 def import_pipeline(url, pipeline_id, auth, json_payload):
     """Import a pipeline.
 
