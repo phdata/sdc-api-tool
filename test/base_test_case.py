@@ -4,7 +4,6 @@ import shlex
 import subprocess
 import time
 import logging
-
 import pytest
 import requests
 
