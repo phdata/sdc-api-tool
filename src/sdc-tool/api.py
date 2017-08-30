@@ -60,7 +60,7 @@ def poll_pipeline_status(target, url, pipeline_id, auth):
         status = pipeline_status(url, pipeline_id, auth)['status']
 
     if current_iterations == 0:
-        raise 'preview status timed out after {} seconds'.format(str(POLL_ITERATIONS / POLLING_SECONDS))
+        raise 'pipeline status timed out after {} seconds. Current status \'{}\''.format(str(POLL_ITERATIONS / POLLING_SECONDS), status)
 
 
 def export_pipeline(url, pipeline_id, auth):
@@ -128,7 +128,7 @@ def poll_preview_status(target, url, pipeline_id, previewer_id, auth):
         current_iterations = current_iterations - 1
 
     if current_iterations == 0:
-        raise 'preview status timed out after {} seconds'.format(str(POLL_ITERATIONS / POLLING_SECONDS))
+        raise 'preview status timed out after {} seconds. Current status: \'{}\''.format(str(POLL_ITERATIONS / POLLING_SECONDS), status)
 
 def stop_pipeline(url, pipeline_id, auth):
     """Stop a running pipeline. The API waits for the pipeline to be 'STOPPED' before returning.
