@@ -39,7 +39,7 @@ def main(conf, args):
         create_json = api.create_pipeline(dest_url, dest_auth, export_json)
         dest_pipeline_id = create_json['info']['pipelineId']
 
-    api.import_pipeline(dest_url, dest_pipeline_id, dest_auth, export_json)
+    api.import_pipeline(dest_url, dest_pipeline_id, dest_auth, export_json, overwrite=True)
 
     # Start the imported pipeline
     if args.start_dest:
