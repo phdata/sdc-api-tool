@@ -64,4 +64,4 @@ def execute_cmd(cmd):
     logging.debug('stderr'.format(err))
     logging.debug('stdout'.format(out))
 
-    return exitcode, out, err
+    return exitcode, out.decode("utf-8"), err.decode("utf-8")
