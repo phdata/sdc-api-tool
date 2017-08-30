@@ -1,10 +1,13 @@
 from base_test_case import *
 
 def test_import(sdc):
-    execute_cmd("../sdc-tool pipeline import --dest production --pipelineJson testpipeline.json --pipelineId firstpipe")
+    exit_code, out, err = execute_cmd("../sdc-tool pipeline import --dest production --pipelineJson testpipeline.json --pipelineId firstpipe")
+    assert exit_code == 0
 
 def test_export(sdc):
-    execute_cmd("../sdc-tool pipeline export --src production --out test-results/pipeline-out.json --pipelineId firstpipe")
+    exit_code, out, err = execute_cmd("../sdc-tool pipeline export --src production --out test-results/pipeline-out.json --pipelineId firstpipe")
+    assert exit_code == 0
 
 def test_promote(sdc):
-    execute_cmd("../sdc-tool pipeline promote --src production --srcPipelineId firstpipe --dest production")
+    exit_code, out, err = execute_cmd("../sdc-tool pipeline promote --src production --srcPipelineId firstpipe --dest production")
+    assert exit_code == 0

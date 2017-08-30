@@ -23,4 +23,5 @@ def main(conf, args):
     host_url = api.build_pipeline_url(build_instance_url(host))
     host_auth = tuple([conf.creds['instances'][args.host_instance]['user'],
                       conf.creds['instances'][args.host_instance]['pass']])
-    api.validate_pipeline(host_url, args.pipeline_id, host_auth)
+    validate_result = api.validate_pipeline(host_url, args.pipeline_id, host_auth)
+    print(json.dumps(validate_result, indent=4, sort_keys=False))

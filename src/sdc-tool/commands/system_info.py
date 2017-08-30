@@ -25,4 +25,4 @@ def main(conf, args):
     src_auth = tuple([conf.creds['instances'][args.src]['user'],
                       conf.creds['instances'][args.src]['pass']])
     sysinfo_json = api.system_info(src_url, src_auth)
-    logging.info(json.dumps(sysinfo_json, indent=4, sort_keys=False))
+    print(json.dumps(sysinfo_json, indent=4, sort_keys=False))

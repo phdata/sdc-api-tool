@@ -26,5 +26,7 @@ def main(conf, args):
     runtime_parameters = {}
     if args.runtime_parameters:
         runtime_parameters = json.loads(args.runtime_parameters)
-    api.start_pipeline(url, args.pipeline_id, auth, runtime_parameters)
+    start_result = api.start_pipeline(url, args.pipeline_id, auth, runtime_parameters)
+    print(json.dumps(start_result, indent=4, sort_keys=False))
+
 

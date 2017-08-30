@@ -14,6 +14,7 @@
 
 import re
 import logging
+import json
 
 import requests
 import time
@@ -87,11 +88,35 @@ def pipeline_status(url, pipeline_id, auth):
         dict: the response json
 
     """
-    statust_result = requests.get(url + '/' + pipeline_id + '/status', headers=X_REQ_BY, auth=auth)
+    status_result = requests.get(url + '/' + pipeline_id + '/status', headers=X_REQ_BY, auth=auth)
+    status_result.raise_for_status()
     logging.debug('Status request: ' + url + '/status')
-    logging.debug(statust_result.json())
-    return statust_result.json()
+    logging.debug(status_result.json())
+    return status_result.json()
 
+def preview_status(url, pipeline_id, previewer_id, auth):
+    """Retrieve the current status for a preview.
+
+    Args:
+        url        (str): the host url in the form 'http://host:port/'.
+        pipeline_id (str): the ID of of the exported pipeline.
+        auth     (tuple): a tuple of username, and password.
+
+    Returns:
+        dict: the response json
+
+    """
+    preview_status = requests.get(url + '/' + pipeline_id + '/preview/' + previewer_id + "/status", headers=X_REQ_BY, auth=auth)
+    preview_status.raise_for_status()
+    logging.debug(preview_status.json())
+    return preview_status.json()
+
+def poll_preview_status(target, url, pipeline_id, previewer_id, auth):
+    status = ""
+    while status != target:
+        print(status)
+        time.sleep(POLLING_SECONDS)
+        status = preview_status(url, pipeline_id, previewer_id, auth)['status']
 
 def stop_pipeline(url, pipeline_id, auth):
     """Stop a running pipeline. The API waits for the pipeline to be 'STOPPED' before returning.
@@ -130,10 +155,36 @@ def validate_pipeline(url, pipeline_id, auth):
 
     """
 
-    preview_result = requests.get(url + '/' + pipeline_id + '/validate', headers=X_REQ_BY, auth=auth)
-    preview_result.raise_for_status()
+    validate_result = requests.get(url + '/' + pipeline_id + '/validate', headers=X_REQ_BY, auth=auth)
+    validate_result.raise_for_status()
+    previewer_id = validate_result.json()['previewerId']
+    poll_preview_status('VALID', url, pipeline_id, previewer_id, auth)
 
-    return preview_result.json()
+    preview_result = requests.get(url + '/' + pipeline_id + '/preview/' + validate_result.json()['previewerId'], headers=X_REQ_BY, auth=auth)
+
+    return json.loads(preview_result.content)
+
+def preview_pipeline(url, pipeline_id, auth):
+    """Preview a pipeline and show issues.
+
+    Args:
+        url         (str): the host url in the form 'http://host:port/'.
+        pipeline_id (str): the ID of of the exported pipeline.
+        auth      (tuple): a tuple of username, and password.
+
+    Returns:
+        dict: the response json
+
+    """
+
+    validate_result = requests.get(url + '/' + pipeline_id + '/validate', headers=X_REQ_BY, auth=auth)
+    validate_result.raise_for_status()
+    previewer_id = validate_result.json()['previewerId']
+    poll_preview_status('VALID', url, pipeline_id, previewer_id, auth)
+
+    preview_result = requests.get(url + '/' + pipeline_id + '/preview/' + validate_result.json()['previewerId'], headers=X_REQ_BY, auth=auth)
+
+    return json.loads(preview_result.content)
 
 
 def import_pipeline(url, pipeline_id, auth, json_payload):

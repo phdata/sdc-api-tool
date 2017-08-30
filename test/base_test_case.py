@@ -6,6 +6,7 @@ import time
 import logging
 import pytest
 import requests
+from subprocess import Popen, PIPE
 
 logging.basicConfig(level=logging.INFO)
 
@@ -51,4 +52,16 @@ def curl_until_success(port, endpoint="/", params={}):
     raise Exception("service didn't start in time")
 
 def execute_cmd(cmd):
-    assert subprocess.check_call(shlex.split(cmd)) == 0
+    """
+    Execute the external command and get its exitcode, stdout and stderr.
+    """
+    args = shlex.split(cmd)
+
+    proc = Popen(args, stdout=PIPE, stderr=PIPE)
+    out, err = proc.communicate()
+    exitcode = proc.returncode
+
+    logging.debug('stderr'.format(err))
+    logging.debug('stdout'.format(out))
+
+    return exitcode, out, err
