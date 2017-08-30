@@ -121,9 +121,10 @@ def preview_status(url, pipeline_id, previewer_id, auth):
 def poll_validation_status(url, pipeline_id, previewer_id, auth):
     status = ""
     current_iterations = POLL_ITERATIONS
-    while status == VALIDATING and current_iterations > 0:
+    while status == "" or status == VALIDATING and current_iterations > 0:
         time.sleep(POLLING_SECONDS)
         status = preview_status(url, pipeline_id, previewer_id, auth)['status']
+        logging.debug('poll_validation status: {}'.format(status))
         current_iterations = current_iterations - 1
 
     if current_iterations == 0:
@@ -172,6 +173,7 @@ def validate_pipeline(url, pipeline_id, auth):
     poll_validation_status(url, pipeline_id, previewer_id, auth)
 
     preview_result = requests.get(url + '/' + pipeline_id + '/preview/' + validate_result.json()['previewerId'], headers=X_REQ_BY, auth=auth)
+    logging.debug('result content: {}'.format(preview_result.content))
 
     return preview_result.json()
 
