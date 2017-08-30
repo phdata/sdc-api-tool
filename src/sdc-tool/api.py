@@ -14,16 +14,18 @@
 
 import re
 import logging
+import json
 
 import requests
 import time
 # required custom header for all SDC REST requests.
 X_REQ_BY = {'X-Requested-By': 'pipeline-utils'}
 POLLING_SECONDS = 0.25
+POLL_ITERATIONS = 100
 
 STATUS_STOPPED = 'STOPPED'
 STATUS_RUNNING = 'RUNNING'
-
+PREVIEW_VALID = 'VALID'
 
 def start_pipeline(url, pipeline_id, auth, runtime_parameters={}):
     """Start a running pipeline. The API waits for the pipeline to be fully started.
@@ -50,10 +52,15 @@ def start_pipeline(url, pipeline_id, auth, runtime_parameters={}):
 
 def poll_pipeline_status(target, url, pipeline_id, auth):
     status = ""
-    while status != target:
+    current_iterations = POLL_ITERATIONS
+
+    while status != target and current_iterations > 0:
         print(status)
         time.sleep(POLLING_SECONDS)
         status = pipeline_status(url, pipeline_id, auth)['status']
+
+    if current_iterations == 0:
+        raise 'pipeline status timed out after {} seconds. Current status \'{}\''.format(str(POLL_ITERATIONS / POLLING_SECONDS), status)
 
 
 def export_pipeline(url, pipeline_id, auth):
@@ -87,11 +94,41 @@ def pipeline_status(url, pipeline_id, auth):
         dict: the response json
 
     """
-    statust_result = requests.get(url + '/' + pipeline_id + '/status', headers=X_REQ_BY, auth=auth)
+    status_result = requests.get(url + '/' + pipeline_id + '/status', headers=X_REQ_BY, auth=auth)
+    status_result.raise_for_status()
     logging.debug('Status request: ' + url + '/status')
-    logging.debug(statust_result.json())
-    return statust_result.json()
+    logging.debug(status_result.json())
+    return status_result.json()
 
+def preview_status(url, pipeline_id, previewer_id, auth):
+    """Retrieve the current status for a preview.
+
+    Args:
+        url        (str): the host url in the form 'http://host:port/'.
+        pipeline_id (str): the ID of of the exported pipeline.
+        previewer_id (str): the previewer id created by starting a preview or validation
+        auth     (tuple): a tuple of username, and password.
+
+    Returns:
+        dict: the response json
+
+    """
+    preview_status = requests.get(url + '/' + pipeline_id + '/preview/' + previewer_id + "/status", headers=X_REQ_BY, auth=auth)
+    preview_status.raise_for_status()
+    logging.debug(preview_status.json())
+    return preview_status.json()
+
+def poll_preview_status(target, url, pipeline_id, previewer_id, auth):
+    status = ""
+    current_iterations = POLL_ITERATIONS
+    while status != target and current_iterations > 0:
+        print(status)
+        time.sleep(POLLING_SECONDS)
+        status = preview_status(url, pipeline_id, previewer_id, auth)['status']
+        current_iterations = current_iterations - 1
+
+    if current_iterations == 0:
+        raise 'preview status timed out after {} seconds. Current status: \'{}\''.format(str(POLL_ITERATIONS / POLLING_SECONDS), status)
 
 def stop_pipeline(url, pipeline_id, auth):
     """Stop a running pipeline. The API waits for the pipeline to be 'STOPPED' before returning.
@@ -130,11 +167,14 @@ def validate_pipeline(url, pipeline_id, auth):
 
     """
 
-    preview_result = requests.get(url + '/' + pipeline_id + '/validate', headers=X_REQ_BY, auth=auth)
-    preview_result.raise_for_status()
+    validate_result = requests.get(url + '/' + pipeline_id + '/validate', headers=X_REQ_BY, auth=auth)
+    validate_result.raise_for_status()
+    previewer_id = validate_result.json()['previewerId']
+    poll_preview_status(PREVIEW_VALID, url, pipeline_id, previewer_id, auth)
+
+    preview_result = requests.get(url + '/' + pipeline_id + '/preview/' + validate_result.json()['previewerId'], headers=X_REQ_BY, auth=auth)
 
     return preview_result.json()
-
 
 def import_pipeline(url, pipeline_id, auth, json_payload):
     """Import a pipeline.

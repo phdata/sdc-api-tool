@@ -15,6 +15,7 @@
 """ Start a pipeline. """
 import api
 import time
+import json
 from commands import build_instance_url
 
 
@@ -24,5 +25,6 @@ def main(conf, args):
     url = api.build_pipeline_url(build_instance_url(host))
     auth = tuple([conf.creds['instances'][args.host_instance]['user'], conf.creds['instances'][args.host_instance]['pass']])
 
-    api.stop_pipeline(url, args.pipeline_id, auth)
+    stop_result = api.stop_pipeline(url, args.pipeline_id, auth)
+    print(json.dumps(stop_result, indent=4, sort_keys=False))
 
