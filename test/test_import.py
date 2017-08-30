@@ -1,7 +1,7 @@
 from base_test_case import *
 
 def test_import(sdc):
-    exit_code, out, err = execute_cmd("../sdc-tool pipeline import --dest production --pipelineJson testpipeline.json --pipelineId firstpipe")
+    exit_code, out, err = execute_cmd("../sdc-tool pipeline import --dest production --overwrite --pipelineJson testpipeline.json --pipelineId firstpipe")
     assert exit_code == 0
 
 def test_export(sdc):

@@ -25,4 +25,4 @@ def main(conf, args):
         dst_url = api.build_pipeline_url(build_instance_url(dst))
         dst_auth = tuple([conf.creds['instances'][args.dst_instance]['user'],
                           conf.creds['instances'][args.dst_instance]['pass']])
-        api.import_pipeline(dst_url, args.pipeline_id, dst_auth, json.load(pipeline_json))
+        api.import_pipeline(dst_url, args.pipeline_id, dst_auth, json.load(pipeline_json), overwrite=args.overwrite)

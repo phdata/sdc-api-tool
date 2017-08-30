@@ -172,7 +172,8 @@ def validate_pipeline(url, pipeline_id, auth):
 
     return preview_result.json()
 
-def import_pipeline(url, pipeline_id, auth, json_payload):
+
+def import_pipeline(url, pipeline_id, auth, json_payload, overwrite = False):
     """Import a pipeline.
 
     This will completely overwrite the existing pipeline.
@@ -182,12 +183,13 @@ def import_pipeline(url, pipeline_id, auth, json_payload):
         pipeline_id   (str): the ID of of the exported pipeline.
         auth       (tuple): a tuple of username, and password.
         json_payload (dict): the exported json payload as a dictionary.
+                overwrite (bool): overwrite existing pipeline
 
     Returns:
         dict: the response json
 
     """
-    parameters = {'overwrite':True}
+    parameters = { 'overwrite' : overwrite }
     import_result = requests.post(url + '/' + pipeline_id + '/import', params=parameters,
                                   headers=X_REQ_BY, auth=auth, json=json_payload)
     if import_result.status_code != 200:

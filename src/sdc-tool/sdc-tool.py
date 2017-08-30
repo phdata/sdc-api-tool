@@ -96,6 +96,8 @@ def define_pipeline_args(subparsers):
     import_parser.add_argument('--pipelineId', required=True, dest='pipeline_id',
                                metavar='destinationPipelineId', help='The ID of a pipeline in the source SDC')
     import_parser.add_argument('--pipelineJson', required=True, dest='pipeline_json', help='Pipeline json file path')
+    import_parser.add_argument('--overwrite', required=False, action='store_true', dest='overwrite', help='Overwrite existing pipeline')
+
     import_parser.set_defaults(func=import_command)
 
     # pipeline start arguments
