@@ -64,4 +64,4 @@ def execute_cmd(cmd):
     logging.debug('stderr'.format(err))
     logging.debug('stdout'.format(out))
 
-    return exitcode, str(out), str(err)
+    return exitcode, out, err

@@ -162,7 +162,7 @@ def validate_pipeline(url, pipeline_id, auth):
 
     preview_result = requests.get(url + '/' + pipeline_id + '/preview/' + validate_result.json()['previewerId'], headers=X_REQ_BY, auth=auth)
 
-    return json.loads(preview_result.content)
+    return json.loads(preview_result.content.decode("utf-8"))
 
 def preview_pipeline(url, pipeline_id, auth):
     """Preview a pipeline and show issues.
