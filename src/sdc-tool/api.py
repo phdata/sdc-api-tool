@@ -119,16 +119,11 @@ def preview_status(url, pipeline_id, previewer_id, auth):
     return preview_status.json()
 
 def poll_validation_status(url, pipeline_id, previewer_id, auth):
-    status = ""
-    current_iterations = POLL_ITERATIONS
-    while status == "" or status == VALIDATING and current_iterations > 0:
+    status = VALIDATING
+    while status == VALIDATING:
         time.sleep(POLLING_SECONDS)
         status = preview_status(url, pipeline_id, previewer_id, auth)['status']
         logging.debug('poll_validation status: {}'.format(status))
-        current_iterations = current_iterations - 1
-
-    if current_iterations == 0:
-        raise 'Validation status timed out after {} seconds. Current status: \'{}\''.format(str(POLL_ITERATIONS / POLLING_SECONDS), status)
 
 def stop_pipeline(url, pipeline_id, auth):
     """Stop a running pipeline. The API waits for the pipeline to be 'STOPPED' before returning.
