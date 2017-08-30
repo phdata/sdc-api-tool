@@ -106,6 +106,7 @@ def preview_status(url, pipeline_id, previewer_id, auth):
     Args:
         url        (str): the host url in the form 'http://host:port/'.
         pipeline_id (str): the ID of of the exported pipeline.
+        previewer_id (str): the previewer id created by starting a preview or validation
         auth     (tuple): a tuple of username, and password.
 
     Returns:
