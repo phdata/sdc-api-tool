@@ -162,30 +162,7 @@ def validate_pipeline(url, pipeline_id, auth):
 
     preview_result = requests.get(url + '/' + pipeline_id + '/preview/' + validate_result.json()['previewerId'], headers=X_REQ_BY, auth=auth)
 
-    return json.loads(preview_result.content.decode("utf-8"))
-
-def preview_pipeline(url, pipeline_id, auth):
-    """Preview a pipeline and show issues.
-
-    Args:
-        url         (str): the host url in the form 'http://host:port/'.
-        pipeline_id (str): the ID of of the exported pipeline.
-        auth      (tuple): a tuple of username, and password.
-
-    Returns:
-        dict: the response json
-
-    """
-
-    validate_result = requests.get(url + '/' + pipeline_id + '/validate', headers=X_REQ_BY, auth=auth)
-    validate_result.raise_for_status()
-    previewer_id = validate_result.json()['previewerId']
-    poll_preview_status('VALID', url, pipeline_id, previewer_id, auth)
-
-    preview_result = requests.get(url + '/' + pipeline_id + '/preview/' + validate_result.json()['previewerId'], headers=X_REQ_BY, auth=auth)
-
-    return json.loads(preview_result.content)
-
+    return preview_result.json()
 
 def import_pipeline(url, pipeline_id, auth, json_payload):
     """Import a pipeline.
