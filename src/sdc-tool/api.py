@@ -21,10 +21,11 @@ import time
 # required custom header for all SDC REST requests.
 X_REQ_BY = {'X-Requested-By': 'pipeline-utils'}
 POLLING_SECONDS = 0.25
+POLL_ITERATIONS = 100
 
 STATUS_STOPPED = 'STOPPED'
 STATUS_RUNNING = 'RUNNING'
-
+PREVIEW_VALID = 'VALID'
 
 def start_pipeline(url, pipeline_id, auth, runtime_parameters={}):
     """Start a running pipeline. The API waits for the pipeline to be fully started.
@@ -51,10 +52,15 @@ def start_pipeline(url, pipeline_id, auth, runtime_parameters={}):
 
 def poll_pipeline_status(target, url, pipeline_id, auth):
     status = ""
-    while status != target:
+    current_iterations = POLL_ITERATIONS
+
+    while status != target and current_iterations > 0:
         print(status)
         time.sleep(POLLING_SECONDS)
         status = pipeline_status(url, pipeline_id, auth)['status']
+
+    if current_iterations == 0:
+        raise 'preview status timed out after {} seconds'.format(str(POLL_ITERATIONS / POLLING_SECONDS))
 
 
 def export_pipeline(url, pipeline_id, auth):
@@ -113,10 +119,15 @@ def preview_status(url, pipeline_id, previewer_id, auth):
 
 def poll_preview_status(target, url, pipeline_id, previewer_id, auth):
     status = ""
-    while status != target:
+    current_iterations = POLL_ITERATIONS
+    while status != target and current_iterations > 0:
         print(status)
         time.sleep(POLLING_SECONDS)
         status = preview_status(url, pipeline_id, previewer_id, auth)['status']
+        current_iterations = current_iterations - 1
+
+    if current_iterations == 0:
+        raise 'preview status timed out after {} seconds'.format(str(POLL_ITERATIONS / POLLING_SECONDS))
 
 def stop_pipeline(url, pipeline_id, auth):
     """Stop a running pipeline. The API waits for the pipeline to be 'STOPPED' before returning.
@@ -158,7 +169,7 @@ def validate_pipeline(url, pipeline_id, auth):
     validate_result = requests.get(url + '/' + pipeline_id + '/validate', headers=X_REQ_BY, auth=auth)
     validate_result.raise_for_status()
     previewer_id = validate_result.json()['previewerId']
-    poll_preview_status('VALID', url, pipeline_id, previewer_id, auth)
+    poll_preview_status(PREVIEW_VALID, url, pipeline_id, previewer_id, auth)
 
     preview_result = requests.get(url + '/' + pipeline_id + '/preview/' + validate_result.json()['previewerId'], headers=X_REQ_BY, auth=auth)
 
