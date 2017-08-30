@@ -25,7 +25,7 @@ POLL_ITERATIONS = 100
 
 STATUS_STOPPED = 'STOPPED'
 STATUS_RUNNING = 'RUNNING'
-PREVIEW_VALID = 'VALID'
+VALIDATING = 'VALIDATING'
 
 def start_pipeline(url, pipeline_id, auth, runtime_parameters={}):
     """Start a running pipeline. The API waits for the pipeline to be fully started.
@@ -118,17 +118,16 @@ def preview_status(url, pipeline_id, previewer_id, auth):
     logging.debug(preview_status.json())
     return preview_status.json()
 
-def poll_preview_status(target, url, pipeline_id, previewer_id, auth):
+def poll_validation_status(url, pipeline_id, previewer_id, auth):
     status = ""
     current_iterations = POLL_ITERATIONS
-    while status != target and current_iterations > 0:
-        print(status)
+    while status == VALIDATING and current_iterations > 0:
         time.sleep(POLLING_SECONDS)
         status = preview_status(url, pipeline_id, previewer_id, auth)['status']
         current_iterations = current_iterations - 1
 
     if current_iterations == 0:
-        raise 'preview status timed out after {} seconds. Current status: \'{}\''.format(str(POLL_ITERATIONS / POLLING_SECONDS), status)
+        raise 'Validation status timed out after {} seconds. Current status: \'{}\''.format(str(POLL_ITERATIONS / POLLING_SECONDS), status)
 
 def stop_pipeline(url, pipeline_id, auth):
     """Stop a running pipeline. The API waits for the pipeline to be 'STOPPED' before returning.
@@ -170,7 +169,7 @@ def validate_pipeline(url, pipeline_id, auth):
     validate_result = requests.get(url + '/' + pipeline_id + '/validate', headers=X_REQ_BY, auth=auth)
     validate_result.raise_for_status()
     previewer_id = validate_result.json()['previewerId']
-    poll_preview_status(PREVIEW_VALID, url, pipeline_id, previewer_id, auth)
+    poll_validation_status(url, pipeline_id, previewer_id, auth)
 
     preview_result = requests.get(url + '/' + pipeline_id + '/preview/' + validate_result.json()['previewerId'], headers=X_REQ_BY, auth=auth)
 
