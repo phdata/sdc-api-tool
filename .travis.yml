@@ -18,10 +18,10 @@ install:
   - pip install -r requirements.txt
 
 before_script:
-  - docker-compose -f src/sdc-tool/test/compose/sdc.yml pull
+  - ./build-scripts/pre-test
 
 script:
-  - cd src/sdc-tool/test; python -m pytest
+  - ./build-scripts/test
 
 after_script:
 
