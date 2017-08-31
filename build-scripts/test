@@ -1,0 +1,6 @@
+#!/bin/bash
+pwd
+pushd src/sdc-tool/test
+pwd
+python -m pytest
+popd
