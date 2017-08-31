@@ -11,4 +11,5 @@ setup(name='sdc-tool',
       install_requires=['yaml', 'requests', 'pytest'],
       packages=['sdc-tool'],
       package_dir={'sdc-tool': 'src/sdc-tool'},
+      scripts=['sdc-tool'],
      )
