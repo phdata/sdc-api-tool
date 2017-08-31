@@ -15,32 +15,32 @@
 import argparse
 import logging
 from conf import Conf
-from commands import promote_pipeline, export_pipeline, import_pipeline, system_info, start_pipeline, stop_pipeline, validate_pipeline
+import commands
 
 logging.basicConfig(level=logging.INFO)
 
 config = Conf()
 
 def promote_command(args):
-    promote_pipeline.main(config, args)
+    commands.promote_pipeline(config, args)
 
 def export_command(args):
-    export_pipeline.main(config, args)
+    commands.export_pipeline(config, args)
 
 def import_command(args):
-    import_pipeline.main(config, args)
+    commands.import_pipeline(config, args)
 
 def info_command(args):
-    system_info.main(config, args)
+    commands.system_info(config, args)
 
 def start_command(args):
-    start_pipeline.main(config, args)
+    commands.start_pipeline(config, args)
 
 def stop_command(args):
-    stop_pipeline.main(config, args)
+    commands.stop_pipeline(config, args)
 
 def validate_command(args):
-    validate_pipeline.main(config, args)
+    commands.validate_pipeline(config, args)
 
 
 def define_pipeline_args(subparsers):
@@ -139,7 +139,7 @@ def define_system_args(subparsers):
     info_parser.set_defaults(func=info_command)
 
 
-def main():
+def main(args):
     """Main script entry point."""
     parser = argparse.ArgumentParser(description='StreamSets Data Collector tools.')
     subparsers = parser.add_subparsers(help='sdc-tool')
@@ -147,9 +147,10 @@ def main():
     define_pipeline_args(subparsers)
     define_system_args(subparsers)
 
-    args = parser.parse_args()
+    args = parser.parse_args(args=args)
     args.func(args)
 
 
 if __name__ == '__main__':
-    main()
+    import sys
+    main(sys.argv[1:])
