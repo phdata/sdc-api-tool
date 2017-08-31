@@ -1,4 +1,4 @@
-#!/bin/bash
-set -e
-SDC_DIR="$(cd "$(dirname "$0")" && pwd)"
-python $SDC_DIR/src/sdc-tool/sdc_tool.py "$@"
+#!/usr/bin/env python
+import sdctool.sdctool as sdc
+
+sdc.main()
