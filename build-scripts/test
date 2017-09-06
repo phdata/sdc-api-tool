@@ -1,6 +1,6 @@
 #!/bin/bash -e
 pwd
-pushd src/sdc-tool/test
+pushd test
 pwd
 python -m pytest
 popd

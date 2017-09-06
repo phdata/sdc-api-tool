@@ -1,4 +1,4 @@
-import api
+from . import api
 import json
 
 def build_instance_url(instance_conf):

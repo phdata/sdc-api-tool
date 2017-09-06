@@ -14,12 +14,13 @@
 
 import argparse
 import logging
-from conf import Conf
-import commands
+from . import conf
+from . import commands
+import sys
 
 logging.basicConfig(level=logging.INFO)
 
-config = Conf()
+config = conf.Conf()
 
 def promote_command(args):
     commands.promote_pipeline(config, args)
@@ -139,7 +140,7 @@ def define_system_args(subparsers):
     info_parser.set_defaults(func=info_command)
 
 
-def main(args):
+def run_with_args(args):
     """Main script entry point."""
     parser = argparse.ArgumentParser(description='StreamSets Data Collector tools.')
     subparsers = parser.add_subparsers(help='sdc-tool')
@@ -150,7 +151,8 @@ def main(args):
     args = parser.parse_args(args=args)
     args.func(args)
 
+def main():
+    run_with_args(args = sys.argv[1:])
 
 if __name__ == '__main__':
-    import sys
-    main(sys.argv[1:])
+    main()

@@ -5,3 +5,8 @@ sdc-hosts.yml
 creds.yml
 dist
 **/**/.cache
+MANIFEST
+.eggs
+*egg-info
+build
+venv
