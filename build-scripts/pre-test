@@ -1,2 +1,2 @@
 #!/bin/bash
-docker-compose -f src/sdc-tool/test/compose/sdc.yml pull
+docker-compose -f test/compose/sdc.yml pull
