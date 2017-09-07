@@ -22,6 +22,7 @@ before_script:
 
 script:
   - ./build-scripts/test
+  - python setup.py install
 
 after_script:
 
