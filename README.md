@@ -12,7 +12,8 @@ the required formatting.
 
 
 `template-sdc-hosts.yml`:
-```yamlex
+
+```
 instances:
   production:
     protocol: https
@@ -35,7 +36,8 @@ instances you plan to use with these utilities.  See the `template-creds.yml` fo
 the required formatting.
 
 `template-creds.yml`:
-```yamlex
+
+```
 instances:
   production:
     user: admin

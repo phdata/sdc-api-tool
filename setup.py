@@ -6,7 +6,7 @@ import pypandoc
 long_description = pypandoc.convert('README.md', 'rst')
 
 setup(name='sdctool',
-      version='0.9.2',
+      version='0.9.3',
       description='Streamsets DataCollector API utility',
       author='phData inc',
       author_email='brian@phdata.io, tony@phdata.io',
@@ -14,7 +14,7 @@ setup(name='sdctool',
       install_requires=['pyyaml', 'requests', 'pytest', 'pypandoc'],
       packages=['sdctool'],
       scripts=['sdc-tool'],
-      download_url = 'https://github.com/phdata/sdc-api-tool/tree/master/dist/sdc-tool-0.9.tar.gz',
+      download_url = 'https://github.com/phdata/sdc-api-tool/tree/master/dist/sdc-tool-0.9.3.tar.gz',
       keywords = ['streamsets', 'api', 'pipeline', 'cli'],
       long_description=long_description
      )
