@@ -3,7 +3,6 @@
 test/test-results
 sdc-hosts.yml
 creds.yml
-dist
 **/**/.cache
 MANIFEST
 .eggs
