@@ -6,7 +6,7 @@ import pypandoc
 long_description = pypandoc.convert('README.md', 'rst')
 
 setup(name='sdctool',
-      version='0.9.1',
+      version='0.9.2',
       description='Streamsets DataCollector API utility',
       author='phData inc',
       author_email='brian@phdata.io, tony@phdata.io',
