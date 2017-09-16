@@ -171,6 +171,19 @@ def validate_pipeline(url, pipeline_id, auth):
 
     return preview_result.json()
 
+def pipeline_exists(url, pipeline_id, auth):
+    '''
+    :param url: (str): the host url in the form 'http://host:port/'.
+    :param pipeline_id: (string) the pipeline identifier
+    :param auth: (tuple) a tuple of username, password
+    :return: (boolean)
+    '''
+    try:
+        pipeline_status(url, pipeline_id, auth)['status']
+        return True
+    except requests.HTTPError:
+        return False
+
 
 def import_pipeline(url, pipeline_id, auth, json_payload, overwrite = False):
     """Import a pipeline.
@@ -191,8 +204,10 @@ def import_pipeline(url, pipeline_id, auth, json_payload, overwrite = False):
     parameters = { 'overwrite' : overwrite }
     import_result = requests.post(url + '/' + pipeline_id + '/import', params=parameters,
                                   headers=X_REQ_BY, auth=auth, json=json_payload)
+
     if import_result.status_code != 200:
         logging.error('Import error response: ' + import_result.text)
+
     import_result.raise_for_status()
     logging.info('Pipeline import successful.')
     return import_result.json()
@@ -231,7 +246,6 @@ def system_info(url, auth):
     """
     sysinfo_response = requests.get(url + '/info', headers=X_REQ_BY, auth=auth)
     sysinfo_response.raise_for_status()
-    print(sysinfo_response)
     return sysinfo_response.json()
 
 def build_pipeline_url(host_url):

@@ -17,31 +17,32 @@ import logging
 from . import conf
 from . import commands
 import sys
+import json
 
 logging.basicConfig(level=logging.INFO)
 
 config = conf.Conf()
 
 def promote_command(args):
-    commands.promote_pipeline(config, args)
+    return commands.promote_pipeline(config, args)
 
 def export_command(args):
-    commands.export_pipeline(config, args)
+    return commands.export_pipeline(config, args)
 
 def import_command(args):
-    commands.import_pipeline(config, args)
+    return commands.import_pipeline(config, args)
 
 def info_command(args):
-    commands.system_info(config, args)
+    return commands.system_info(config, args)
 
 def start_command(args):
-    commands.start_pipeline(config, args)
+    return commands.start_pipeline(config, args)
 
 def stop_command(args):
-    commands.stop_pipeline(config, args)
+    return commands.stop_pipeline(config, args)
 
 def validate_command(args):
-    commands.validate_pipeline(config, args)
+    return commands.validate_pipeline(config, args)
 
 
 def define_pipeline_args(subparsers):
@@ -149,10 +150,11 @@ def run_with_args(args):
     define_system_args(subparsers)
 
     args = parser.parse_args(args=args)
-    args.func(args)
+    result = args.func(args)
+    return result
 
 def main():
-    run_with_args(args = sys.argv[1:])
+    print(json.dumps(run_with_args(args = sys.argv[1:]), indent=4, sort_keys=False))
 
 if __name__ == '__main__':
     main()

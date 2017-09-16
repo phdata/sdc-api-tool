@@ -14,6 +14,7 @@ def export_pipeline(conf, args):
     export_json = api.export_pipeline(src_url, args.src_pipeline_id, src_auth)
     with open(args.out, 'w') as outFile:
         outFile.write(json.dumps(export_json, indent=4, sort_keys=False))
+        return (0, '')
 
 def import_pipeline(conf, args):
     """Import a pipeline from json."""
@@ -22,7 +23,8 @@ def import_pipeline(conf, args):
         dst_url = api.build_pipeline_url(build_instance_url(dst))
         dst_auth = tuple([conf.creds['instances'][args.dst_instance]['user'],
                           conf.creds['instances'][args.dst_instance]['pass']])
-        api.import_pipeline(dst_url, args.pipeline_id, dst_auth, json.load(pipeline_json), overwrite=args.overwrite)
+        parsed_json = json.load(pipeline_json)
+        return api.import_pipeline(dst_url, args.pipeline_id, dst_auth, parsed_json, overwrite=args.overwrite)
 
 def promote_pipeline(conf, args):
     """Export a pipeline from a lower environment and import into higher environment."""
@@ -43,7 +45,7 @@ def promote_pipeline(conf, args):
         create_json = api.create_pipeline(dest_url, dest_auth, export_json)
         dest_pipeline_id = create_json['info']['pipelineId']
 
-    api.import_pipeline(dest_url, dest_pipeline_id, dest_auth, export_json, overwrite=True)
+    return api.import_pipeline(dest_url, dest_pipeline_id, dest_auth, export_json, overwrite=True)
 
     # Start the imported pipeline
     if args.start_dest:
@@ -58,7 +60,8 @@ def start_pipeline(conf, args):
     if args.runtime_parameters:
         runtime_parameters = json.loads(args.runtime_parameters)
     start_result = api.start_pipeline(url, args.pipeline_id, auth, runtime_parameters)
-    print(json.dumps(start_result, indent=4, sort_keys=False))
+
+    return start_result
 
 def stop_pipeline(conf, args):
     """Stop a pipeline."""
@@ -67,7 +70,7 @@ def stop_pipeline(conf, args):
     auth = tuple([conf.creds['instances'][args.host_instance]['user'], conf.creds['instances'][args.host_instance]['pass']])
 
     stop_result = api.stop_pipeline(url, args.pipeline_id, auth)
-    print(json.dumps(stop_result, indent=4, sort_keys=False))
+    return stop_result
 
 def system_info(conf, args):
     """Retieve SDC system information."""
@@ -76,7 +79,7 @@ def system_info(conf, args):
     src_auth = tuple([conf.creds['instances'][args.src]['user'],
                       conf.creds['instances'][args.src]['pass']])
     sysinfo_json = api.system_info(src_url, src_auth)
-    print(json.dumps(sysinfo_json, indent=4, sort_keys=False))
+    return sysinfo_json
 
 def validate_pipeline(conf, args):
     """Validate a pipeline configuration."""
@@ -85,4 +88,4 @@ def validate_pipeline(conf, args):
     host_auth = tuple([conf.creds['instances'][args.host_instance]['user'],
                       conf.creds['instances'][args.host_instance]['pass']])
     validate_result = api.validate_pipeline(host_url, args.pipeline_id, host_auth)
-    print(json.dumps(validate_result, indent=4, sort_keys=False))
+    return validate_result

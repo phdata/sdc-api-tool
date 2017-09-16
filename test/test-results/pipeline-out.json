@@ -5,7 +5,7 @@
         "pipelineId": "SimpleTest73804380-2f6d-4e54-a393-b5fb02207dd0",
         "title": "SimpleTest",
         "description": "",
-        "uuid": "3c519385-616f-4c55-b946-e4c8ba3583d4",
+        "uuid": "751f81b6-e833-4689-96a0-2e1df492638a",
         "configuration": [
             {
                 "name": "executionMode",
@@ -462,20 +462,20 @@
             "eventLanes": []
         },
         "info": {
-            "pipelineId": "firstpipe",
+            "pipelineId": "82d67f7b-2238-4887-8ef9-33f095fe491a",
             "title": "SimpleTest",
             "description": "",
-            "created": 1504708434276,
-            "lastModified": 1504708434351,
+            "created": 1505561959074,
+            "lastModified": 1505561959156,
             "creator": "admin",
             "lastModifier": "admin",
             "lastRev": "0",
-            "uuid": "3c519385-616f-4c55-b946-e4c8ba3583d4",
+            "uuid": "751f81b6-e833-4689-96a0-2e1df492638a",
             "valid": true,
             "metadata": {
                 "labels": []
             },
-            "name": "firstpipe"
+            "name": "82d67f7b-2238-4887-8ef9-33f095fe491a"
         },
         "metadata": {
             "labels": []
@@ -499,9 +499,9 @@
         },
         "valid": true,
         "issues": {
-            "pipelineIssues": [],
             "stageIssues": {},
-            "issueCount": 0
+            "issueCount": 0,
+            "pipelineIssues": []
         },
         "previewable": true
     },
@@ -573,7 +573,7 @@
         "dataRuleDefinitions": [],
         "driftRuleDefinitions": [],
         "emailIds": [],
-        "uuid": "12c5fd7d-9e50-4ee5-921c-e1834450679e",
+        "uuid": "11d01451-82ea-482f-9a7b-f8b507a50a19",
         "configuration": [
             {
                 "name": "webhookConfigs",
