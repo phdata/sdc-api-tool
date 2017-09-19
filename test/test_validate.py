@@ -1,30 +1,26 @@
 from base_test_case import *
-import json
 from sdctool import sdc_tool
 import shlex
+import uuid
 
-def test_validate(sdc, capsys):
+
+pipe_id = uuid.uuid4()
+
+def test_validate(sdc):
     sdc_tool.run_with_args(
         shlex.split(
-            'pipeline import --overwrite --dest production --pipelineJson testpipeline.json --pipelineId previewpipe'))
-    # empty capture from pipeline import
-    capsys.readouterr()
-    sdc_tool.run_with_args(shlex.split('pipeline validate --host development --pipelineId previewpipe'))
-    out, err = capsys.readouterr()
-    out_parsed = json.loads(out)
-    assert out_parsed['status'] == "VALID"
+            'pipeline import --overwrite --dest production --pipelineJson testpipeline.json --pipelineId {}'.format(pipe_id)))
+    result = sdc_tool.run_with_args(shlex.split('pipeline validate --host development --pipelineId {}'.format(pipe_id)))
+    assert result['status'] == "VALID"
 
 
-def test_invalid_pipeline(sdc, capsys):
+def test_invalid_pipeline(sdc):
     sdc_tool.run_with_args(
         shlex.split(
-            'pipeline import --overwrite --dest production --pipelineJson testpipeline-invalid.json --pipelineId previewpipe'))
-    # empty capture from pipeline import
-    capsys.readouterr()
+            'pipeline import --overwrite --dest production --pipelineJson testpipeline-invalid.json --pipelineId {}'.format(pipe_id)))
 
-    sdc_tool.run_with_args(
+    result = sdc_tool.run_with_args(
         shlex.split(
-            'pipeline validate --host development --pipelineId previewpipe'))
-    out, err = capsys.readouterr()
-    out_parsed = json.loads(out)
-    assert out_parsed['status'] == "VALIDATION_ERROR"
+            'pipeline validate --host development --pipelineId {}'.format(pipe_id)))
+
+    assert result['status'] == "VALIDATION_ERROR"
