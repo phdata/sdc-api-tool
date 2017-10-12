@@ -26,7 +26,7 @@ STATUS_STOPPED = 'STOPPED'
 STATUS_RUNNING = 'RUNNING'
 VALIDATING = 'VALIDATING'
 
-def start_pipeline(url, pipeline_id, auth, runtime_parameters={}):
+def start_pipeline(url, pipeline_id, auth, runtime_parameters={}, verify_ssl = True):
     """Start a running pipeline. The API waits for the pipeline to be fully started.
 
     Args:
@@ -34,12 +34,13 @@ def start_pipeline(url, pipeline_id, auth, runtime_parameters={}):
         pipeline_id         (str): the ID of of the exported pipeline.
         auth              (tuple): a tuple of username, and password.
         runtime_parameters (dict): the desired runtime parameters for the pipeline.
+        verify_ssl         (bool): whether to verify ssl certificates
 
     Returns:
         dict: the response json
     """
     start_result = requests.post(url + '/' + pipeline_id + '/start',
-                                 headers=X_REQ_BY, auth=auth, json=runtime_parameters)
+                                 headers=X_REQ_BY, auth=auth, verify=verify_ssl, json=runtime_parameters)
     start_result.raise_for_status()
     logging.info('Pipeline start requested.')
 
@@ -49,129 +50,134 @@ def start_pipeline(url, pipeline_id, auth, runtime_parameters={}):
     return start_result.json()
 
 
-def poll_pipeline_status(target, url, pipeline_id, auth):
+def poll_pipeline_status(target, url, pipeline_id, auth, verify_ssl = True):
     status = ""
     current_iterations = POLL_ITERATIONS
 
     while status != target and current_iterations > 0:
         print(status)
         time.sleep(POLLING_SECONDS)
-        status = pipeline_status(url, pipeline_id, auth)['status']
+        status = pipeline_status(url, pipeline_id, auth, verify_ssl)['status']
 
     if current_iterations == 0:
         raise 'pipeline status timed out after {} seconds. Current status \'{}\''.format(str(POLL_ITERATIONS / POLLING_SECONDS), status)
 
 
-def export_pipeline(url, pipeline_id, auth):
+def export_pipeline(url, pipeline_id, auth, verify_ssl = True):
     """Export the config and rules for a pipeline.
 
     Args:
         url        (str): the host url in the form 'http://host:port/'.
         pipeline_id (str): the ID of of the exported pipeline.
         auth     (tuple): a tuple of username, and password.
+        verify_ssl   (bool): whether to verify ssl certificates
 
     Returns:
         dict: the response json
 
     """
-    export_result = requests.get(url + '/' + pipeline_id + '/export', headers=X_REQ_BY, auth=auth)
+    export_result = requests.get(url + '/' + pipeline_id + '/export', headers=X_REQ_BY, auth=auth, verify=verify_ssl)
     if export_result.status_code == 404:
         logging.error('Pipeline not found: ' + pipeline_id)
     export_result.raise_for_status()
     return export_result.json()
 
 
-def pipeline_status(url, pipeline_id, auth):
+def pipeline_status(url, pipeline_id, auth, verify_ssl = True):
     """Retrieve the current status for a pipeline.
 
     Args:
-        url        (str): the host url in the form 'http://host:port/'.
-        pipeline_id (str): the ID of of the exported pipeline.
-        auth     (tuple): a tuple of username, and password.
+        url          (str): the host url in the form 'http://host:port/'.
+        pipeline_id  (str): the ID of of the exported pipeline.
+        auth         (tuple): a tuple of username, and password.
+        verify_ssl   (bool): whether to verify ssl certificates
 
     Returns:
         dict: the response json
 
     """
-    status_result = requests.get(url + '/' + pipeline_id + '/status', headers=X_REQ_BY, auth=auth)
+    status_result = requests.get(url + '/' + pipeline_id + '/status', headers=X_REQ_BY, auth=auth, verify=verify_ssl)
     status_result.raise_for_status()
     logging.debug('Status request: ' + url + '/status')
     logging.debug(status_result.json())
     return status_result.json()
 
-def preview_status(url, pipeline_id, previewer_id, auth):
+def preview_status(url, pipeline_id, previewer_id, auth, verify_ssl = True):
     """Retrieve the current status for a preview.
 
     Args:
-        url        (str): the host url in the form 'http://host:port/'.
-        pipeline_id (str): the ID of of the exported pipeline.
+        url          (str): the host url in the form 'http://host:port/'.
+        pipeline_id  (str): the ID of of the exported pipeline.
         previewer_id (str): the previewer id created by starting a preview or validation
-        auth     (tuple): a tuple of username, and password.
+        auth         (tuple): a tuple of username, and password.
+        verify_ssl   (bool): whether to verify ssl certificates
 
     Returns:
         dict: the response json
 
     """
-    preview_status = requests.get(url + '/' + pipeline_id + '/preview/' + previewer_id + "/status", headers=X_REQ_BY, auth=auth)
+    preview_status = requests.get(url + '/' + pipeline_id + '/preview/' + previewer_id + "/status", headers=X_REQ_BY, auth=auth, verify=verify_ssl)
     preview_status.raise_for_status()
     logging.debug(preview_status.json())
     return preview_status.json()
 
-def poll_validation_status(url, pipeline_id, previewer_id, auth):
+def poll_validation_status(url, pipeline_id, previewer_id, auth, verify_ssl = True):
     status = VALIDATING
     while status == VALIDATING:
         time.sleep(POLLING_SECONDS)
-        status = preview_status(url, pipeline_id, previewer_id, auth)['status']
+        status = preview_status(url, pipeline_id, previewer_id, auth, verify_ssl)['status']
         logging.debug('poll_validation status: {}'.format(status))
 
-def stop_pipeline(url, pipeline_id, auth):
+def stop_pipeline(url, pipeline_id, auth, verify_ssl = True):
     """Stop a running pipeline. The API waits for the pipeline to be 'STOPPED' before returning.
 
     Args:
         url         (str): the host url in the form 'http://host:port/'.
         pipeline_id (str): the ID of of the exported pipeline.
         auth      (tuple): a tuple of username, and password.
+        verify_ssl (bool): whether to verify ssl certificates
 
     Returns:
         dict: the response json
 
     """
 
-    stop_result = requests.post(url + '/' + pipeline_id + '/stop', headers=X_REQ_BY, auth=auth)
+    stop_result = requests.post(url + '/' + pipeline_id + '/stop', headers=X_REQ_BY, auth=auth, verify=verify_ssl)
     stop_result.raise_for_status()
 
     logging.info("Pipeline stop requested.")
 
-    poll_pipeline_status(STATUS_STOPPED, url, pipeline_id, auth)
+    poll_pipeline_status(STATUS_STOPPED, url, pipeline_id, auth, verify_ssl)
 
     logging.info('Pipeline stopped.')
     return stop_result.json()
 
 
-def validate_pipeline(url, pipeline_id, auth):
+def validate_pipeline(url, pipeline_id, auth, verify_ssl = True):
     """Validate a pipeline and show issues.
 
     Args:
         url         (str): the host url in the form 'http://host:port/'.
         pipeline_id (str): the ID of of the exported pipeline.
         auth      (tuple): a tuple of username, and password.
+        verify_ssl (bool): whether to verify ssl certificates
 
     Returns:
         dict: the response json
 
     """
 
-    validate_result = requests.get(url + '/' + pipeline_id + '/validate', headers=X_REQ_BY, auth=auth)
+    validate_result = requests.get(url + '/' + pipeline_id + '/validate', headers=X_REQ_BY, auth=auth, verify=verify_ssl)
     validate_result.raise_for_status()
     previewer_id = validate_result.json()['previewerId']
     poll_validation_status(url, pipeline_id, previewer_id, auth)
 
-    preview_result = requests.get(url + '/' + pipeline_id + '/preview/' + validate_result.json()['previewerId'], headers=X_REQ_BY, auth=auth)
+    preview_result = requests.get(url + '/' + pipeline_id + '/preview/' + validate_result.json()['previewerId'], headers=X_REQ_BY, auth=auth, verify=verify_ssl)
     logging.debug('result content: {}'.format(preview_result.content))
 
     return preview_result.json()
 
-def pipeline_exists(url, pipeline_id, auth):
+def pipeline_exists(url, pipeline_id, auth, verify_ssl = True):
     '''
     :param url: (str): the host url in the form 'http://host:port/'.
     :param pipeline_id: (string) the pipeline identifier
@@ -179,13 +185,13 @@ def pipeline_exists(url, pipeline_id, auth):
     :return: (boolean)
     '''
     try:
-        pipeline_status(url, pipeline_id, auth)['status']
+        pipeline_status(url, pipeline_id, auth, verify_ssl)['status']
         return True
     except requests.HTTPError:
         return False
 
 
-def import_pipeline(url, pipeline_id, auth, json_payload, overwrite = False):
+def import_pipeline(url, pipeline_id, auth, json_payload, overwrite = False, verify_ssl = True):
     """Import a pipeline.
 
     This will completely overwrite the existing pipeline.
@@ -195,7 +201,8 @@ def import_pipeline(url, pipeline_id, auth, json_payload, overwrite = False):
         pipeline_id   (str): the ID of of the exported pipeline.
         auth       (tuple): a tuple of username, and password.
         json_payload (dict): the exported json payload as a dictionary.
-                overwrite (bool): overwrite existing pipeline
+        overwrite    (bool): overwrite existing pipeline
+        verify_ssl   (bool): whether to verify ssl certificates
 
     Returns:
         dict: the response json
@@ -203,7 +210,7 @@ def import_pipeline(url, pipeline_id, auth, json_payload, overwrite = False):
     """
     parameters = { 'overwrite' : overwrite }
     import_result = requests.post(url + '/' + pipeline_id + '/import', params=parameters,
-                                  headers=X_REQ_BY, auth=auth, json=json_payload)
+                                  headers=X_REQ_BY, auth=auth, verify=verify_ssl, json=json_payload)
 
     if import_result.status_code != 200:
         logging.error('Import error response: ' + import_result.text)
@@ -213,13 +220,14 @@ def import_pipeline(url, pipeline_id, auth, json_payload, overwrite = False):
     return import_result.json()
 
 
-def create_pipeline(url, auth, json_payload):
+def create_pipeline(url, auth, json_payload, verify_ssl = True):
     """Create a new pipeline.
 
     Args:
         url           (str): the host url in the form 'http://host:port/'.
         auth        (tuple): a tuple of username, and password.
         json_payload (dict): the exported json paylod as a dictionary.
+        verify_ssl   (bool): whether to verify ssl certificates
 
     Returns:
         dict: the response json
@@ -229,14 +237,14 @@ def create_pipeline(url, auth, json_payload):
     description = json_payload['pipelineConfig']['description']
     params = {'description':description, 'autoGeneratePipelineId':True}
     logging.info('No destination pipeline ID provided.  Creating a new pipeline: ' + title)
-    put_result = requests.put(url + '/' + title, params=params, headers=X_REQ_BY, auth=auth)
+    put_result = requests.put(url + '/' + title, params=params, headers=X_REQ_BY, auth=auth, verify=verify_ssl)
     put_result.raise_for_status()
     create_json = put_result.json()
     logging.debug(create_json)
     logging.info('Pipeline creation successful.')
     return create_json
 
-def system_info(url, auth):
+def system_info(url, auth, verify_ssl = True):
     """Retrieve SDC system information.
 
     Args:
@@ -244,7 +252,7 @@ def system_info(url, auth):
         auth (tuple): a tuple of username, and password.
 
     """
-    sysinfo_response = requests.get(url + '/info', headers=X_REQ_BY, auth=auth)
+    sysinfo_response = requests.get(url + '/info', headers=X_REQ_BY, auth=auth, verify=verify_ssl)
     sysinfo_response.raise_for_status()
     return sysinfo_response.json()
 
