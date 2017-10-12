@@ -81,7 +81,7 @@ def define_pipeline_args(subparsers):
                                 dest='verify_ssl',
                                 metavar='verify-ssl',
                                 help='Boolean indicating whether to verify SSL certs',
-                                default=True)
+                                default='True')
 
     promote_parser.set_defaults(func=promote_command)
 
@@ -101,7 +101,7 @@ def define_pipeline_args(subparsers):
                                 dest='verify_ssl',
                                 metavar='verify-ssl',
                                 help='Boolean indicating whether to verify SSL certs',
-                                default=True)
+                                default='True')
     export_parser.set_defaults(func=export_command)
 
     # pipeline import arguments
@@ -117,7 +117,7 @@ def define_pipeline_args(subparsers):
                                dest='verify_ssl',
                                metavar='verify-ssl',
                                help='Boolean indicating whether to verify SSL certs',
-                               default=True)
+                               default='True')
     import_parser.set_defaults(func=import_command)
 
     # pipeline start arguments
@@ -133,7 +133,7 @@ def define_pipeline_args(subparsers):
                                dest='verify_ssl',
                                metavar='verify-ssl',
                                help='Boolean indicating whether to verify SSL certs',
-                               default=True)
+                               default='True')
     start_parser.set_defaults(func=start_command)
 
     # pipeline stop arguments
@@ -147,7 +147,7 @@ def define_pipeline_args(subparsers):
                                dest='verify_ssl',
                                metavar='verify-ssl',
                                help='Boolean indicating whether to verify SSL certs',
-                               default=True)
+                               default='True')
     stop_parser.set_defaults(func=stop_command)
 
     # pipeline validate arguments
@@ -161,7 +161,7 @@ def define_pipeline_args(subparsers):
                                dest='verify_ssl',
                                metavar='verify-ssl',
                                help='Boolean indicating whether to verify SSL certs',
-                               default=True)
+                               default='True')
     validate_parser.set_defaults(func=validate_command)
 
 

@@ -170,7 +170,7 @@ def validate_pipeline(url, pipeline_id, auth, verify_ssl = True):
     validate_result = requests.get(url + '/' + pipeline_id + '/validate', headers=X_REQ_BY, auth=auth, verify=verify_ssl)
     validate_result.raise_for_status()
     previewer_id = validate_result.json()['previewerId']
-    poll_validation_status(url, pipeline_id, previewer_id, auth)
+    poll_validation_status(url, pipeline_id, previewer_id, auth, verify_ssl)
 
     preview_result = requests.get(url + '/' + pipeline_id + '/preview/' + validate_result.json()['previewerId'], headers=X_REQ_BY, auth=auth, verify=verify_ssl)
     logging.debug('result content: {}'.format(preview_result.content))
