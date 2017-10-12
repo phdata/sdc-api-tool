@@ -26,7 +26,7 @@ STATUS_STOPPED = 'STOPPED'
 STATUS_RUNNING = 'RUNNING'
 VALIDATING = 'VALIDATING'
 
-def start_pipeline(url, pipeline_id, auth, runtime_parameters={}, verify_ssl = True):
+def start_pipeline(url, pipeline_id, auth, verify_ssl, runtime_parameters={}):
     """Start a running pipeline. The API waits for the pipeline to be fully started.
 
     Args:
@@ -50,7 +50,7 @@ def start_pipeline(url, pipeline_id, auth, runtime_parameters={}, verify_ssl = T
     return start_result.json()
 
 
-def poll_pipeline_status(target, url, pipeline_id, auth, verify_ssl = True):
+def poll_pipeline_status(target, url, pipeline_id, auth, verify_ssl):
     status = ""
     current_iterations = POLL_ITERATIONS
 
@@ -63,7 +63,7 @@ def poll_pipeline_status(target, url, pipeline_id, auth, verify_ssl = True):
         raise 'pipeline status timed out after {} seconds. Current status \'{}\''.format(str(POLL_ITERATIONS / POLLING_SECONDS), status)
 
 
-def export_pipeline(url, pipeline_id, auth, verify_ssl = True):
+def export_pipeline(url, pipeline_id, auth, verify_ssl):
     """Export the config and rules for a pipeline.
 
     Args:
@@ -83,7 +83,7 @@ def export_pipeline(url, pipeline_id, auth, verify_ssl = True):
     return export_result.json()
 
 
-def pipeline_status(url, pipeline_id, auth, verify_ssl = True):
+def pipeline_status(url, pipeline_id, auth, verify_ssl):
     """Retrieve the current status for a pipeline.
 
     Args:
@@ -102,7 +102,7 @@ def pipeline_status(url, pipeline_id, auth, verify_ssl = True):
     logging.debug(status_result.json())
     return status_result.json()
 
-def preview_status(url, pipeline_id, previewer_id, auth, verify_ssl = True):
+def preview_status(url, pipeline_id, previewer_id, auth, verify_ssl):
     """Retrieve the current status for a preview.
 
     Args:
@@ -121,14 +121,14 @@ def preview_status(url, pipeline_id, previewer_id, auth, verify_ssl = True):
     logging.debug(preview_status.json())
     return preview_status.json()
 
-def poll_validation_status(url, pipeline_id, previewer_id, auth, verify_ssl = True):
+def poll_validation_status(url, pipeline_id, previewer_id, auth, verify_ssl):
     status = VALIDATING
     while status == VALIDATING:
         time.sleep(POLLING_SECONDS)
         status = preview_status(url, pipeline_id, previewer_id, auth, verify_ssl)['status']
         logging.debug('poll_validation status: {}'.format(status))
 
-def stop_pipeline(url, pipeline_id, auth, verify_ssl = True):
+def stop_pipeline(url, pipeline_id, auth, verify_ssl):
     """Stop a running pipeline. The API waits for the pipeline to be 'STOPPED' before returning.
 
     Args:
@@ -153,7 +153,7 @@ def stop_pipeline(url, pipeline_id, auth, verify_ssl = True):
     return stop_result.json()
 
 
-def validate_pipeline(url, pipeline_id, auth, verify_ssl = True):
+def validate_pipeline(url, pipeline_id, auth, verify_ssl):
     """Validate a pipeline and show issues.
 
     Args:
@@ -177,7 +177,7 @@ def validate_pipeline(url, pipeline_id, auth, verify_ssl = True):
 
     return preview_result.json()
 
-def pipeline_exists(url, pipeline_id, auth, verify_ssl = True):
+def pipeline_exists(url, pipeline_id, auth, verify_ssl):
     '''
     :param url: (str): the host url in the form 'http://host:port/'.
     :param pipeline_id: (string) the pipeline identifier
@@ -191,7 +191,7 @@ def pipeline_exists(url, pipeline_id, auth, verify_ssl = True):
         return False
 
 
-def import_pipeline(url, pipeline_id, auth, json_payload, overwrite = False, verify_ssl = True):
+def import_pipeline(url, pipeline_id, auth, json_payload, verify_ssl, overwrite = False):
     """Import a pipeline.
 
     This will completely overwrite the existing pipeline.
@@ -220,7 +220,7 @@ def import_pipeline(url, pipeline_id, auth, json_payload, overwrite = False, ver
     return import_result.json()
 
 
-def create_pipeline(url, auth, json_payload, verify_ssl = True):
+def create_pipeline(url, auth, json_payload, verify_ssl):
     """Create a new pipeline.
 
     Args:
@@ -244,7 +244,7 @@ def create_pipeline(url, auth, json_payload, verify_ssl = True):
     logging.info('Pipeline creation successful.')
     return create_json
 
-def system_info(url, auth, verify_ssl = True):
+def system_info(url, auth, verify_ssl):
     """Retrieve SDC system information.
 
     Args:

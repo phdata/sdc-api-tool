@@ -76,12 +76,6 @@ def define_pipeline_args(subparsers):
     promote_parser.add_argument('--start',
                                 action='store_true', dest='start_dest',
                                 help='Start the destination pipeline if the import is successful.')
-    promote_parser.add_argument('--verifySsl',
-                                required=False,
-                                dest='verify_ssl',
-                                metavar='verify-ssl',
-                                help='Boolean indicating whether to verify SSL certs',
-                                default='True')
 
     promote_parser.set_defaults(func=promote_command)
 
@@ -96,12 +90,6 @@ def define_pipeline_args(subparsers):
                                dest='src_pipeline_id',
                                metavar='sourcePipelineId', help='The ID of a pipeline in the source SDC')
     export_parser.add_argument('--out', required=True, dest='out', help='Output file path')
-    export_parser.add_argument('--verifySsl',
-                                required=False,
-                                dest='verify_ssl',
-                                metavar='verify-ssl',
-                                help='Boolean indicating whether to verify SSL certs',
-                                default='True')
     export_parser.set_defaults(func=export_command)
 
     # pipeline import arguments
@@ -112,12 +100,6 @@ def define_pipeline_args(subparsers):
                                metavar='destinationPipelineId', help='The ID of a pipeline in the source SDC')
     import_parser.add_argument('--pipelineJson', required=True, dest='pipeline_json', help='Pipeline json file path')
     import_parser.add_argument('--overwrite', required=False, action='store_true', dest='overwrite', help='Overwrite existing pipeline')
-    import_parser.add_argument('--verifySsl',
-                               required=False,
-                               dest='verify_ssl',
-                               metavar='verify-ssl',
-                               help='Boolean indicating whether to verify SSL certs',
-                               default='True')
     import_parser.set_defaults(func=import_command)
 
     # pipeline start arguments
@@ -128,12 +110,6 @@ def define_pipeline_args(subparsers):
                                metavar='destinationPipelineId', help='The ID of a pipeline in the source SDC')
     start_parser.add_argument('--runtimeParameters', required=False, dest='runtime_parameters',
                                metavar='{"HOST": "host1"}', help='JSON blob of runtime parameters')
-    start_parser.add_argument('--verifySsl',
-                               required=False,
-                               dest='verify_ssl',
-                               metavar='verify-ssl',
-                               help='Boolean indicating whether to verify SSL certs',
-                               default='True')
     start_parser.set_defaults(func=start_command)
 
     # pipeline stop arguments
@@ -142,12 +118,6 @@ def define_pipeline_args(subparsers):
                                help='The instance name of the target SDC (must match an instance name in sdc-hosts.yml)')
     stop_parser.add_argument('--pipelineId', required=True, dest='pipeline_id',
                                metavar='destinationPipelineId', help='The ID of a pipeline in the source SDC')
-    stop_parser.add_argument('--verifySsl',
-                               required=False,
-                               dest='verify_ssl',
-                               metavar='verify-ssl',
-                               help='Boolean indicating whether to verify SSL certs',
-                               default='True')
     stop_parser.set_defaults(func=stop_command)
 
     # pipeline validate arguments
@@ -156,12 +126,6 @@ def define_pipeline_args(subparsers):
                                help='The instance name of the target SDC (must match an instance name in sdc-hosts.yml)')
     validate_parser.add_argument('--pipelineId', required=True, dest='pipeline_id',
                                metavar='destinationPipelineId', help='The ID of a pipeline in the source SDC')
-    validate_parser.add_argument('--verifySsl',
-                               required=False,
-                               dest='verify_ssl',
-                               metavar='verify-ssl',
-                               help='Boolean indicating whether to verify SSL certs',
-                               default='True')
     validate_parser.set_defaults(func=validate_command)
 
 
