@@ -44,7 +44,7 @@ def start_pipeline(url, pipeline_id, auth, verify_ssl, runtime_parameters={}):
     start_result.raise_for_status()
     logging.info('Pipeline start requested.')
 
-    poll_pipeline_status(STATUS_RUNNING, url, pipeline_id, auth)
+    poll_pipeline_status(STATUS_RUNNING, url, pipeline_id, auth, verify_ssl)
 
     logging.info("Pipeline started.")
     return start_result.json()
