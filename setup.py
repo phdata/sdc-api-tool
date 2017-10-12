@@ -2,7 +2,7 @@
 
 from setuptools import setup
 
-version = '0.9.4'
+version = '0.10.1'
 
 long_description = open('README.rst').read()
 
