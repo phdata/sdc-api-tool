@@ -17,11 +17,14 @@ instances:
     protocol: http
     host: localhost
     port: 18630
+    verify_ssl: False
   stage:
     protocol: http
     host: localhost
     port: 18630
+    verify_ssl: False
   development:
     protocol: http
     host: localhost
     port: 18630
+    verify_ssl: False
