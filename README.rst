@@ -28,10 +28,12 @@ required formatting.
         protocol: https
         host: production-sdc-host
         port: 18630
+        verify_ssl: True
       stage:
         protocol: https
         host: stage-sdc-host
         port: 18630
+        verify_ssl: True
       development:
         protocol: http
         host: dev-sdc-host

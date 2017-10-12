@@ -11,7 +11,7 @@ def export_pipeline(conf, args):
     src_url = api.build_pipeline_url(build_instance_url(src))
     src_auth = tuple([conf.creds['instances'][args.src_instance]['user'],
                       conf.creds['instances'][args.src_instance]['pass']])
-    verify_ssl = src['verify_ssl']
+    verify_ssl = src.get('verify_ssl', True)
     export_json = api.export_pipeline(src_url, args.src_pipeline_id, src_auth, verify_ssl)
     with open(args.out, 'w') as outFile:
         outFile.write(json.dumps(export_json, indent=4, sort_keys=False))
@@ -25,7 +25,7 @@ def import_pipeline(conf, args):
         dst_auth = tuple([conf.creds['instances'][args.dst_instance]['user'],
                           conf.creds['instances'][args.dst_instance]['pass']])
         parsed_json = json.load(pipeline_json)
-        verify_ssl = dst['verify_ssl']
+        verify_ssl = dst.get('verify_ssl', True)
         return api.import_pipeline(dst_url, args.pipeline_id, dst_auth, parsed_json, verify_ssl, overwrite=args.overwrite)
 
 def promote_pipeline(conf, args):
@@ -33,7 +33,7 @@ def promote_pipeline(conf, args):
     src = conf.config['instances'][args.src_instance]
     src_url = api.build_pipeline_url(build_instance_url(src))
     src_auth = tuple([conf.creds['instances'][args.src_instance]['user'], conf.creds['instances'][args.src_instance]['pass']])
-    verify_ssl = src['verify_ssl']
+    verify_ssl = src.get('verify_ssl', True)
     export_json = api.export_pipeline(src_url, args.src_pipeline_id, src_auth, verify_ssl)
 
     # Import the pipeline to the destination
@@ -60,7 +60,7 @@ def start_pipeline(conf, args):
     url = api.build_pipeline_url(build_instance_url(host))
     auth = tuple([conf.creds['instances'][args.host_instance]['user'], conf.creds['instances'][args.host_instance]['pass']])
     runtime_parameters = {}
-    verify_ssl = host['verify_ssl']
+    verify_ssl = host.get('verify_ssl', True)
     if args.runtime_parameters:
         runtime_parameters = json.loads(args.runtime_parameters)
     start_result = api.start_pipeline(url, args.pipeline_id, auth, verify_ssl, runtime_parameters)
@@ -72,7 +72,7 @@ def stop_pipeline(conf, args):
     host = conf.config['instances'][args.host_instance]
     url = api.build_pipeline_url(build_instance_url(host))
     auth = tuple([conf.creds['instances'][args.host_instance]['user'], conf.creds['instances'][args.host_instance]['pass']])
-    verify_ssl = host['verify_ssl']
+    verify_ssl = host.get('verify_ssl', True)
 
     stop_result = api.stop_pipeline(url, args.pipeline_id, auth, verify_ssl)
     return stop_result
@@ -83,7 +83,7 @@ def system_info(conf, args):
     src_url = api.build_system_url(build_instance_url(src))
     src_auth = tuple([conf.creds['instances'][args.src]['user'],
                       conf.creds['instances'][args.src]['pass']])
-    verify_ssl = src['verify_ssl']
+    verify_ssl = src.get('verify_ssl', True)
     sysinfo_json = api.system_info(src_url, src_auth, verify_ssl)
     return sysinfo_json
 
@@ -93,6 +93,6 @@ def validate_pipeline(conf, args):
     host_url = api.build_pipeline_url(build_instance_url(host))
     host_auth = tuple([conf.creds['instances'][args.host_instance]['user'],
                       conf.creds['instances'][args.host_instance]['pass']])
-    verify_ssl = host['verify_ssl']
+    verify_ssl = host.get('verify_ssl', True)
     validate_result = api.validate_pipeline(host_url, args.pipeline_id, host_auth, verify_ssl)
     return validate_result
