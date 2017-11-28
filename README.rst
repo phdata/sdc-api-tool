@@ -3,7 +3,7 @@ sdctool
 
 A set of utilities to help with management of Streamsets pipelines.
 
-Instalation
+Installation
 -----------
 
 ``pip install sdctool``
