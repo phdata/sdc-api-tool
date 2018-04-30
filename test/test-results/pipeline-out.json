@@ -1,11 +1,11 @@
 {
     "pipelineConfig": {
-        "schemaVersion": 3,
-        "version": 6,
-        "pipelineId": "SimpleTest73804380-2f6d-4e54-a393-b5fb02207dd0",
+        "schemaVersion": 5,
+        "version": 8,
+        "pipelineId": "4d04cf70-3d03-4e73-84a2-1e5ed7b11ade",
         "title": "SimpleTest",
         "description": "",
-        "uuid": "751f81b6-e833-4689-96a0-2e1df492638a",
+        "uuid": "9b2277e7-249f-4d6a-b6d1-a920c543aa71",
         "configuration": [
             {
                 "name": "executionMode",
@@ -86,6 +86,30 @@
             {
                 "name": "statsAggregatorStage",
                 "value": "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_devnull_StatsDpmDirectlyDTarget::1"
+            },
+            {
+                "name": "workerCount",
+                "value": 0
+            },
+            {
+                "name": "startEventStage",
+                "value": "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_devnull_ToErrorNullDTarget::1"
+            },
+            {
+                "name": "stopEventStage",
+                "value": "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_devnull_ToErrorNullDTarget::1"
+            },
+            {
+                "name": "errorRecordPolicy",
+                "value": "ORIGINAL_RECORD"
+            },
+            {
+                "name": "shouldCreateFailureSnapshot",
+                "value": true
+            },
+            {
+                "name": "sparkConfigs",
+                "value": []
             }
         ],
         "uiInfo": {
@@ -104,7 +128,7 @@
                 "instanceName": "Directory_01",
                 "library": "streamsets-datacollector-basic-lib",
                 "stageName": "com_streamsets_pipeline_stage_origin_spooldir_SpoolDirDSource",
-                "stageVersion": "9",
+                "stageVersion": "10",
                 "configuration": [
                     {
                         "name": "conf.dataFormatConfig.compression",
@@ -402,6 +426,46 @@
                     {
                         "name": "stageOnRecordError",
                         "value": "TO_ERROR"
+                    },
+                    {
+                        "name": "conf.spoolingPeriod",
+                        "value": 5
+                    },
+                    {
+                        "name": "conf.dataFormatConfig.csvAllowExtraColumns",
+                        "value": false
+                    },
+                    {
+                        "name": "conf.dataFormatConfig.csvExtraColumnPrefix",
+                        "value": "_extra_"
+                    },
+                    {
+                        "name": "conf.dataFormatConfig.netflowOutputValuesMode",
+                        "value": "RAW_AND_INTERPRETED"
+                    },
+                    {
+                        "name": "conf.dataFormatConfig.maxTemplateCacheSize",
+                        "value": -1
+                    },
+                    {
+                        "name": "conf.dataFormatConfig.templateCacheTimeoutMs",
+                        "value": -1
+                    },
+                    {
+                        "name": "conf.dataFormatConfig.netflowOutputValuesModeDatagram",
+                        "value": "RAW_AND_INTERPRETED"
+                    },
+                    {
+                        "name": "conf.dataFormatConfig.maxTemplateCacheSizeDatagram",
+                        "value": -1
+                    },
+                    {
+                        "name": "conf.dataFormatConfig.templateCacheTimeoutMsDatagram",
+                        "value": -1
+                    },
+                    {
+                        "name": "conf.numberOfThreads",
+                        "value": 1
                     }
                 ],
                 "uiInfo": {
@@ -422,7 +486,8 @@
                 "outputLanes": [
                     "Directory_01OutputLane15004090258640"
                 ],
-                "eventLanes": []
+                "eventLanes": [],
+                "services": []
             },
             {
                 "instanceName": "Trash_01",
@@ -441,7 +506,8 @@
                     "Directory_01OutputLane15004090258640"
                 ],
                 "outputLanes": [],
-                "eventLanes": []
+                "eventLanes": [],
+                "services": []
             }
         ],
         "errorStage": {
@@ -459,23 +525,26 @@
             },
             "inputLanes": [],
             "outputLanes": [],
-            "eventLanes": []
+            "eventLanes": [],
+            "services": []
         },
         "info": {
-            "pipelineId": "82d67f7b-2238-4887-8ef9-33f095fe491a",
+            "pipelineId": "4d04cf70-3d03-4e73-84a2-1e5ed7b11ade",
             "title": "SimpleTest",
             "description": "",
-            "created": 1505561959074,
-            "lastModified": 1505561959156,
+            "created": 1525094605453,
+            "lastModified": 1525094605537,
             "creator": "admin",
             "lastModifier": "admin",
             "lastRev": "0",
-            "uuid": "751f81b6-e833-4689-96a0-2e1df492638a",
+            "uuid": "9b2277e7-249f-4d6a-b6d1-a920c543aa71",
             "valid": true,
             "metadata": {
                 "labels": []
             },
-            "name": "82d67f7b-2238-4887-8ef9-33f095fe491a"
+            "name": "4d04cf70-3d03-4e73-84a2-1e5ed7b11ade",
+            "sdcVersion": "3.1.1.0",
+            "sdcId": "a4a80a7f-4c79-11e8-afa1-d3bf83492fa9"
         },
         "metadata": {
             "labels": []
@@ -495,19 +564,22 @@
             },
             "inputLanes": [],
             "outputLanes": [],
-            "eventLanes": []
+            "eventLanes": [],
+            "services": []
         },
+        "startEventStages": [],
+        "stopEventStages": [],
         "valid": true,
         "issues": {
+            "pipelineIssues": [],
             "stageIssues": {},
-            "issueCount": 0,
-            "pipelineIssues": []
+            "issueCount": 0
         },
         "previewable": true
     },
     "pipelineRules": {
-        "schemaVersion": 2,
-        "version": 1,
+        "schemaVersion": 3,
+        "version": 2,
         "metricsRuleDefinitions": [
             {
                 "id": "badRecordsAlertID",
@@ -572,15 +644,19 @@
         ],
         "dataRuleDefinitions": [],
         "driftRuleDefinitions": [],
-        "emailIds": [],
-        "uuid": "11d01451-82ea-482f-9a7b-f8b507a50a19",
+        "uuid": "488f16b0-93dd-4ce5-b1b6-9637b56a3a74",
         "configuration": [
             {
                 "name": "webhookConfigs",
                 "value": []
+            },
+            {
+                "name": "emailIDs",
+                "value": []
             }
         ],
-        "ruleIssues": null
+        "ruleIssues": [],
+        "configIssues": []
     },
     "libraryDefinitions": null
 }

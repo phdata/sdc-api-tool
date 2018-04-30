@@ -19,8 +19,8 @@ import requests
 import time
 # required custom header for all SDC REST requests.
 X_REQ_BY = {'X-Requested-By': 'pipeline-utils'}
-POLLING_SECONDS = 0.25
-POLL_ITERATIONS = 100
+POLLING_SECONDS = 1
+POLL_ITERATIONS = 45
 
 STATUS_STOPPED = 'STOPPED'
 STATUS_RUNNING = 'RUNNING'

@@ -41,18 +41,20 @@ def promote_pipeline(conf, args):
     dest_url = api.build_pipeline_url(build_instance_url(dest))
     dest_auth = tuple([conf.creds['instances'][args.dest_instance]['user'], conf.creds['instances'][args.dest_instance]['pass']])
     dest_pipeline_id = args.dest_pipeline_id
-    if dest_pipeline_id:
+    if dest_pipeline_id and api.pipeline_status(dest_url, dest_pipeline_id, dest_auth, verify_ssl)['status'] != api.STATUS_STOPPED:
         api.stop_pipeline(dest_url, dest_pipeline_id, dest_auth, verify_ssl)
     else:
         # No destination pipeline id was provided, must be a new pipeline.
         create_json = api.create_pipeline(dest_url, dest_auth, export_json, verify_ssl)
         dest_pipeline_id = create_json['info']['pipelineId']
 
-    return api.import_pipeline(dest_url, dest_pipeline_id, dest_auth, export_json, verify_ssl, overwrite=True)
+    result = api.import_pipeline(dest_url, dest_pipeline_id, dest_auth, export_json, verify_ssl, overwrite=True)
 
     # Start the imported pipeline
     if args.start_dest:
         api.start_pipeline(dest_url, dest_pipeline_id, dest_auth, verify_ssl)
+
+    return result
 
 def start_pipeline(conf, args):
     """Start a pipeline"""
@@ -96,3 +98,13 @@ def validate_pipeline(conf, args):
     verify_ssl = host.get('verify_ssl', True)
     validate_result = api.validate_pipeline(host_url, args.pipeline_id, host_auth, verify_ssl)
     return validate_result
+
+def status_pipeline(conf, args):
+    """Stop a pipeline."""
+    host = conf.config['instances'][args.host_instance]
+    url = api.build_pipeline_url(build_instance_url(host))
+    auth = tuple([conf.creds['instances'][args.host_instance]['user'], conf.creds['instances'][args.host_instance]['pass']])
+    verify_ssl = host.get('verify_ssl', True)
+
+    status_result = api.pipeline_status(url, args.pipeline_id, auth, verify_ssl)
+    return status_result['status']
