@@ -1,7 +1,7 @@
 version: '2'
 services:
   sdc-api-streamsets:
-    image: streamsets/datacollector:2.6.0.1
+    image: streamsets/datacollector:3.1.1.0
     ports: 
     - 18630:18630
   

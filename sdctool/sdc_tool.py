@@ -19,7 +19,7 @@ from . import commands
 import sys
 import json
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 
 config = conf.Conf()
 
@@ -44,12 +44,14 @@ def stop_command(args):
 def validate_command(args):
     return commands.validate_pipeline(config, args)
 
+def status_command(args):
+    return commands.status_pipeline(config, args)
 
 def define_pipeline_args(subparsers):
 
     pipeline_parser = \
         subparsers.add_parser("pipeline",
-                              help='''Available commands: 'import', 'export', 'start', 'stop', 'promote', 'validate\'''')
+                              help='''Available commands: 'import', 'export', 'start', 'stop', 'promote', 'validate', 'status\'''')
 
     pipeline_subparsers = pipeline_parser.add_subparsers(help="Pipeline commands")
 
@@ -127,6 +129,14 @@ def define_pipeline_args(subparsers):
     validate_parser.add_argument('--pipelineId', required=True, dest='pipeline_id',
                                metavar='destinationPipelineId', help='The ID of a pipeline in the source SDC')
     validate_parser.set_defaults(func=validate_command)
+
+    # pipeline status arguments
+    validate_parser = pipeline_subparsers.add_parser('status', help='Retrieve current status of a pipeline.')
+    validate_parser.add_argument('--host', required=True, dest='host_instance', metavar='host_instance',
+                                 help='The instance name of the target SDC (must match an instance name in sdc-hosts.yml)')
+    validate_parser.add_argument('--pipelineId', required=True, dest='pipeline_id',
+                                 metavar='destinationPipelineId', help='The ID of a pipeline in the source SDC')
+    validate_parser.set_defaults(func=status_command)
 
 
 def define_system_args(subparsers):

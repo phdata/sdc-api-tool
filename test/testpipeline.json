@@ -280,7 +280,7 @@
         "value" : 1000
       }, {
         "name" : "conf.poolingTimeoutSecs",
-        "value" : 600
+        "value" : 15
       }, {
         "name" : "conf.maxSpoolFiles",
         "value" : 1000

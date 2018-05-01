@@ -21,3 +21,13 @@ def test_promote(sdc):
     sdc_tool.run_with_args(
         shlex.split(
             'pipeline promote --src production --srcPipelineId {} --dest production'.format(pipe_id)))
+    assert sdc_tool.run_with_args(
+            shlex.split('pipeline status --host production --pipelineId {}'.format(pipe_id))) == 'EDITED'
+
+
+def test_promote_and_start(sdc):
+    result = sdc_tool.run_with_args(
+            shlex.split(
+                    'pipeline promote --src production --srcPipelineId {} --dest production --start'.format(pipe_id)))
+    assert sdc_tool.run_with_args(
+            shlex.split('pipeline status --host production --pipelineId {}'.format(result['pipelineConfig']['pipelineId']))) == 'RUNNING'
