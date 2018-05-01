@@ -2,10 +2,10 @@
     "pipelineConfig": {
         "schemaVersion": 5,
         "version": 8,
-        "pipelineId": "4d04cf70-3d03-4e73-84a2-1e5ed7b11ade",
+        "pipelineId": "30bc0b24-2abe-4a86-8b61-1313795a7f13",
         "title": "SimpleTest",
         "description": "",
-        "uuid": "9b2277e7-249f-4d6a-b6d1-a920c543aa71",
+        "uuid": "fdbf6f1e-ce14-47ec-a0a4-31f9e9f8a59e",
         "configuration": [
             {
                 "name": "executionMode",
@@ -397,7 +397,7 @@
                     },
                     {
                         "name": "conf.poolingTimeoutSecs",
-                        "value": 600
+                        "value": 15
                     },
                     {
                         "name": "conf.maxSpoolFiles",
@@ -529,22 +529,22 @@
             "services": []
         },
         "info": {
-            "pipelineId": "4d04cf70-3d03-4e73-84a2-1e5ed7b11ade",
+            "pipelineId": "30bc0b24-2abe-4a86-8b61-1313795a7f13",
             "title": "SimpleTest",
             "description": "",
-            "created": 1525094605453,
-            "lastModified": 1525094605537,
+            "created": 1525190257851,
+            "lastModified": 1525190257938,
             "creator": "admin",
             "lastModifier": "admin",
             "lastRev": "0",
-            "uuid": "9b2277e7-249f-4d6a-b6d1-a920c543aa71",
+            "uuid": "fdbf6f1e-ce14-47ec-a0a4-31f9e9f8a59e",
             "valid": true,
             "metadata": {
                 "labels": []
             },
-            "name": "4d04cf70-3d03-4e73-84a2-1e5ed7b11ade",
+            "name": "30bc0b24-2abe-4a86-8b61-1313795a7f13",
             "sdcVersion": "3.1.1.0",
-            "sdcId": "a4a80a7f-4c79-11e8-afa1-d3bf83492fa9"
+            "sdcId": "5a5ec062-4d58-11e8-847f-698c95ac2b82"
         },
         "metadata": {
             "labels": []
@@ -644,7 +644,7 @@
         ],
         "dataRuleDefinitions": [],
         "driftRuleDefinitions": [],
-        "uuid": "488f16b0-93dd-4ce5-b1b6-9637b56a3a74",
+        "uuid": "3c16dbd1-4f07-4f8a-9fab-79bf7f4b432a",
         "configuration": [
             {
                 "name": "webhookConfigs",
